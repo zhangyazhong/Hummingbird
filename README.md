@@ -1,7 +1,7 @@
 # Hummingbird
 
 [![Build Status](https://travis-ci.org/zhangyazhong/Hummingbird.svg?branch=master)](https://travis-ci.org/zhangyazhong/Hummingbird)
-
+[![codecov](https://codecov.io/gh/zhangyazhong/Hummingbird/branch/master/graph/badge.svg)](https://codecov.io/gh/zhangyazhong/Hummingbird)
 
 Hummingbird provides lots of easy-to-use tools for research experiment and contains parts shown as follows:
 
@@ -136,7 +136,7 @@ For pretty showing, we can use `sort()` to make rows and columns in order:
 └──────────────────────────┴─────────────────────────┴─────────────────────────┘
 ```
 
-**TODO: **
+<b>TODO:</b>
 
 - cache ssh connections temporarily to speed up remote transfermation performance;
 - support more authentication methods for ssh.
@@ -195,7 +195,7 @@ The keyword `classpath` is refer to the root path of the project. e.g. If the pr
 
 
 
-**TODO: **support more configuration formats.
+<b>TODO: </b>support more configuration formats.
 
 ## Timer
 
@@ -226,7 +226,7 @@ For easy to read, we implement a `format(long time)` function to convert a long 
 
 
 
-**TODO: **
+<b>TODO: </b>
 
 - use annotations to make code more modular;
 - record time based on time point, not timer.
@@ -265,7 +265,7 @@ Besides, use `UNIQUE_NAME_LENGTH(int UNIQUE_NAME_LENGTH)` and `MAX_LOOP_ROUND(lo
 
 
 
-**TODO: **
+<b>TODO: </b>
 
 - use other ways to ensure 100% no-duplicate;
 - support custom name format.
