@@ -14,7 +14,8 @@
     <packaging>jar</packaging>
 
     <name>Hummingbird</name>
-    <url>http://maven.apache.org</url>
+    <description>Easy-to-use tools for research experiment.</description>
+    <url>https://github.com/zhangyazhong/Hummingbird</url>
 
     <licenses>
         <license>
@@ -33,24 +34,88 @@
         </developer>
     </developers>
 
-    <repositories>
-        <repository>
-            <id>maven-public</id>
-            <name>Public Repository</name>
-            <url>http://us.sissors.cn:8081/repository/maven-public/</url>
-        </repository>
-    </repositories>
+    <scm>
+        <connection>scm:git:https://github.com/zhangyazhong/Hummingbird.git</connection>
+        <developerConnection>scm:git:https://github.com/zhangyazhong/Hummingbird.git</developerConnection>
+        <url>https://github.com/zhangyazhong/Hummingbird</url>
+        <tag>master</tag>
+    </scm>
 
-    <distributionManagement>
-        <repository>
-            <id>maven-releases</id>
-            <url>http://us.sissors.cn:8081/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>maven-snapshots</id>
-            <url>http://us.sissors.cn:8081/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <repositories>
+                <repository>
+                    <id>maven-public</id>
+                    <name>Public Repository</name>
+                    <url>http://us.sissors.cn:8081/repository/maven-public/</url>
+                </repository>
+            </repositories>
+            <distributionManagement>
+                <repository>
+                    <id>maven-releases</id>
+                    <url>http://us.sissors.cn:8081/repository/maven-releases/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>maven-snapshots</id>
+                    <url>http://us.sissors.cn:8081/repository/maven-snapshots/</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+        <profile>
+            <id>release</id>
+            <distributionManagement>
+                <repository>
+                    <id>sonatype-nexus-staging</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>sonatype-nexus-snapshots</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+            </distributionManagement>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.8</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>sonatype-nexus-staging</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-release-plugin</artifactId>
+                        <version>2.5.3</version>
+                        <configuration>
+                            <autoVersionSubmodules>true</autoVersionSubmodules>
+                            <useReleaseProfile>false</useReleaseProfile>
+                            <releaseProfiles>release</releaseProfiles>
+                            <goals>deploy</goals>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
