@@ -10,7 +10,7 @@
 
     <groupId>cn.sissors</groupId>
     <artifactId>hummingbird</artifactId>
-    <version>1.0-Zeta</version>
+    <version>1.0-Eta</version>
     <packaging>jar</packaging>
 
     <name>Hummingbird</name>
@@ -63,6 +63,7 @@
         <asciitable.version>0.3.2</asciitable.version>
         <org.json.version>20160810</org.json.version>
         <ganymed-ssh2.version>build210</ganymed-ssh2.version>
+        <aspectj.version>1.9.2</aspectj.version>
     </properties>
 
     <dependencies>
@@ -102,6 +103,11 @@
             <artifactId>ganymed-ssh2</artifactId>
             <version>${ganymed-ssh2.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>${aspectj.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -114,6 +120,22 @@
                     <target>${maven.compiler.target}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>aspectj-maven-plugin</artifactId>
+                <version>1.11</version>
+                <configuration>
+                    <complianceLevel>1.8</complianceLevel>
+                    <source>1.8</source>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -36,6 +36,11 @@ public class ExecutionReportTest {
     }
 
     @Test
+    public void test1Category() {
+        report.getCategory("round0").print();
+    }
+
+    @Test
     public void test1Merge() {
         ExecutionReport report2 = ExecutionReport.create(ImmutableMap.of(
                 "round2.partA.result", new ResultUnit(4, 2),
@@ -48,5 +53,29 @@ public class ExecutionReportTest {
     @Test
     public void test1ForEach() {
         report.forEach((key, value) -> System.out.println(String.format("%s -> %s", key, value.toString())));
+    }
+
+    @Test
+    public void test2Get() {
+        ExecutionReport _report2 = ExecutionReport.create();
+        _report2.put("int", 1);
+        _report2.put("double", 2.5);
+        _report2.put("long", 3L);
+        _report2.put("string", "hello");
+        _report2.put("result", new ResultUnit(4, 2));
+        _report2.print();
+        System.out.println(_report2.getInt("int"));
+        System.out.println(_report2.getDouble("double"));
+        System.out.println(_report2.getLong("long"));
+        System.out.println(_report2.getString("string"));
+        System.out.println(_report2.get("result", ResultUnit.class));
+    }
+
+    @Test
+    public void test2Put() {
+        ExecutionReport _report2 = ExecutionReport.create();
+        _report2.put(ImmutableMap.of("int", 1, "double", 2.5));
+        _report2.put("long", 3L);
+        _report2.print();
     }
 }

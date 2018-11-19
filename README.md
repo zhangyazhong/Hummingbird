@@ -138,7 +138,7 @@ For pretty showing, we can use `sort()` to make rows and columns in order:
 
 <b>TODO:</b>
 
-- cache ssh connections temporarily to speed up remote transfermation performance;
+- cache ssh connections temporarily to speed up remote transformation performance;
 - support more authentication methods for ssh.
 
 ## Configuration 
@@ -319,6 +319,7 @@ report.search(".*\\.partA\\..*").print();
 │round0.partA.result│r=5.0, e=3.0│
 └───────────────────┴────────────┘
 */
+
 
 report.search("round1\\..*").print();
 /*

@@ -1,10 +1,10 @@
 package cn.sissors.hummingbird.runtime.namespace;
 
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -76,7 +76,7 @@ public class NameManager {
             name = String.format("%s", RandomStringUtils.randomAlphanumeric(UNIQUE_NAME_LENGTH));
         }
         if (!NAME_RECORDS.containsKey(namespace)) {
-            NAME_RECORDS.put(namespace, Sets.newConcurrentHashSet());
+            NAME_RECORDS.put(namespace, Collections.newSetFromMap(Maps.newConcurrentMap()));
         }
         NAME_RECORDS.get(namespace).add(name);
         return namespace.equals(DEFAULT_NAMESPACE) ? name : String.format("%s.%s", namespace, name);

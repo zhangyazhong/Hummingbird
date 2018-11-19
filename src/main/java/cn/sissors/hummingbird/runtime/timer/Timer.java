@@ -1,7 +1,6 @@
 package cn.sissors.hummingbird.runtime.timer;
 
 import cn.sissors.hummingbird.annotions.CanIgnoreReturnValue;
-import cn.sissors.hummingbird.runtime.namespace.NameManager;
 import com.google.common.collect.Maps;
 
 import java.util.Map;
@@ -13,6 +12,8 @@ import java.util.Map;
  * @version 2018-10-23
  */
 public class Timer {
+    public final static String EMPTY_NAME = "";
+
     private static Map<String, Timer> timerMap;
     private String name;
     private Long startTime;
@@ -27,13 +28,13 @@ public class Timer {
     }
 
     /**
-     * Create a timer with a randomly generated name.
+     * Create a timer with an empty name.
      *
      * @return a timer
      */
     @CanIgnoreReturnValue
     public static Timer create() {
-        return create(NameManager.uniqueName());
+        return create(EMPTY_NAME);
     }
 
     /**
@@ -46,9 +47,17 @@ public class Timer {
     public static Timer create(String name) {
         Timer timer = new Timer(name);
         timerMap.put(timer.name, timer);
-
         Timer.start(timer.name);
         return timer;
+    }
+
+    /**
+     * Start a timer with the empty name.
+     *
+     * <p>Actually, a timer will be started automatically once it has been created.
+     */
+    public static void start() {
+        Timer.start(EMPTY_NAME);
     }
 
     /**
@@ -61,6 +70,16 @@ public class Timer {
     public static void start(String name) {
         Timer timer = timerMap.get(name);
         timer.startTime = System.currentTimeMillis();
+    }
+
+    /**
+     * Stop a timer with the empty name.
+     *
+     * @return the recorded time of the timer
+     */
+    @CanIgnoreReturnValue
+    public static Long stop() {
+        return Timer.stop(EMPTY_NAME);
     }
 
     /**
@@ -77,14 +96,26 @@ public class Timer {
     }
 
     /**
+     * Get recorded time of a timer with the empty name.
+     *
+     * @return the time accurate to milliseconds
+     */
+    public static Long getTime() {
+        return Timer.getTime(EMPTY_NAME);
+    }
+
+    /**
      * Get recorded time of a timer with the specified name.
      *
      * @param name the timer's name
      * @return the time accurate to milliseconds
      */
     public static Long getTime(String name) {
+        if (!timerMap.containsKey(name)) {
+            return -1L;
+        }
         Timer timer = timerMap.get(name);
-        return timer.getTime();
+        return timer.time();
     }
 
     /**
@@ -105,7 +136,7 @@ public class Timer {
      *
      * @return the time accurate to milliseconds
      */
-    public Long getTime() {
+    public Long time() {
         if (this.stopTime == null || this.stopTime <= 0) {
             stop(this.name);
         }
@@ -117,7 +148,7 @@ public class Timer {
      *
      * @return the name of timer
      */
-    public String getName() {
+    public String name() {
         return name;
     }
 
@@ -144,6 +175,6 @@ public class Timer {
     }
 
     public String toString() {
-        return Timer.format(getTime());
+        return Timer.format(time());
     }
 }
