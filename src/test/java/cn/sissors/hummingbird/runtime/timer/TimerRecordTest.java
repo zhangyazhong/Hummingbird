@@ -13,7 +13,7 @@ public class TimerRecordTest {
     public void testReport() {
         sleep(2000L);
         System.out.println(Timer.getTime("sleep_period"));
-        assertTrue(Timer.getTime("sleep_period") > 2000);
+        assertTrue(Timer.getTime("sleep_period") >= 2000);
     }
 
     @TimerRecord("sleep_period")
