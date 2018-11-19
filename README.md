@@ -1,5 +1,6 @@
 # Hummingbird
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/cc52bf9d3a9448a58eed051ddff57220)](https://app.codacy.com/app/zhangyazhong/Hummingbird?utm_source=github.com&utm_medium=referral&utm_content=zhangyazhong/Hummingbird&utm_campaign=Badge_Grade_Dashboard)
 [![Build Status](https://travis-ci.org/zhangyazhong/Hummingbird.svg?branch=master)](https://travis-ci.org/zhangyazhong/Hummingbird)
 [![codecov](https://codecov.io/gh/zhangyazhong/Hummingbird/branch/master/graph/badge.svg)](https://codecov.io/gh/zhangyazhong/Hummingbird)
 
