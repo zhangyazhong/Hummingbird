@@ -32,7 +32,7 @@ public class TimerTest {
         Timer.start(timer.name());
         Thread.sleep(1000);
         System.out.println(Timer.format(timer.time()));
-        assertTrue(timer.time() >= 2000);
+        assertTrue(timer.time() >= 1000 && Timer.getTime() <= 2000);
 
     }
 
@@ -43,6 +43,6 @@ public class TimerTest {
         Timer.start();
         Thread.sleep(1000);
         System.out.println(Timer.format(Timer.getTime()));
-        assertTrue(Timer.getTime() >= 2000);
+        assertTrue(Timer.getTime() >= 1000 && Timer.getTime() <= 2000);
     }
 }

@@ -6,6 +6,7 @@ import cn.sissors.hummingbird.exceptions.DataPersistenceException;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 
 /**
@@ -24,6 +25,7 @@ public class BinaryTableContainerTest {
         binaryTableContainer.push("3:00", "count", "300");
         binaryTableContainer.print();
         binaryTableContainer.persist("./persistence/binary-container");
+        assertEquals(binaryTableContainer.get("1:00", "cost"), "10ms");
     }
 
     @Test
@@ -31,6 +33,7 @@ public class BinaryTableContainerTest {
         TableContainer<String, String, String> binaryTableContainer =
                 new BinaryTableContainer<String, String, String>("time").load("./persistence/binary-container");
         binaryTableContainer.print();
+        assertEquals(binaryTableContainer.get("1:00", "cost"), "10ms");
     }
 
 }

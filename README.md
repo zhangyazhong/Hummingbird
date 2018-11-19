@@ -6,11 +6,11 @@
 
 Hummingbird provides lots of easy-to-use tools for research experiment and contains parts shown as follows:
 
-- a series of collections for table data handling, persistence and loading;
-- multiple solutions for various configuration formats;
-- a useful tool to record time cost of code block running;
-- a name manager to generate and manage names;
-- execution report generation with regex supported.
+  - a series of collections for table data handling, persistence and loading;
+  - multiple solutions for various configuration formats; 
+  - a useful tool to record time cost of code block running;
+  - a name manager to generate and manage names;
+  - execution report generation with regex supported.
 
 ## Collections
 
@@ -20,18 +20,18 @@ Hummingbird provides lots of easy-to-use tools for research experiment and conta
 
 For table data, the base class is `TableContainer<R, C, V>`. It supports 
 
-- `push`: push a cell into container;
-- `get`: get a cell from container based on row and column;
-- `merge`: combine two containers into single one;
-- `cut`: filter out some rows or columns based on customized rules;
-- `clean`: clear container;
-- `sort`: sort container based on the dictionary order of row and column keys;
-- `print`: print content on to screen or customized print stream.
+  - `push`: push a cell into container;
+  - `get`: get a cell from container based on row and column;
+  - `merge`: combine two containers into single one;
+  - `cut`: filter out some rows or columns based on customized rules;
+  - `clean`: clear container;
+  - `sort`: sort container based on the dictionary order of row and column keys;
+  - `print`: print content on to screen or customized print stream.
 
 Besides, there is a `CSVTableContainer<R, C, V>` that extends from `TableContainer<R, C, V>` which supports to persist and load in csv format
 
-- `persist`: write data into a csv format file;
-- `load`: load data from a csv format file.
+  - `persist`: write data into a csv format file;
+  - `load`: load data from a csv format file.
 
 ### Examples
 
@@ -143,15 +143,9 @@ For pretty showing, we can use `sort()` to make rows and columns in order:
 
 `cn.sissors.hummingbird.runtime.config`
 
-
-
 In brief, `Configuration` is a set of pairs in *key-value* format. After initialization, user can use `get(key)` and `set(key, value)` to fetch and update the pair respectively. Besides, `Configuration` provides a series of functions to convert value into the specified type automatically, though it's stored as a `String` inside of `Configuration` object. And currently, it's strongly recommended to use common data types such as `String`, `Integer`, `Long` and `Double` to avoid weird error.
 
-
-
 `Configuration` is an abstract class. That's because different configuration methods have different configuration formats. For example:
-
-
 
 `.properties` file is in `key = value` format:
 
@@ -174,8 +168,6 @@ system.name = ConfigTest
 
 In this toolkit, we wrote a sub-class called `PropertiesConfiguration`, which impletment `load` method to load `.properties` file into memory. If you need to use it, just create a class to extend `PropertiesConfiguration` and implement `locations()` method to return the path list of your configurations.
 
-
-
 There is an example:
 
 ```java
@@ -191,15 +183,11 @@ public class HummingbirdConfiguration extends PropertiesConfiguration {
 
 The keyword `classpath` is refer to the root path of the project. e.g. If the project is built by maven, then `classpath` would refer to the directory of `/src/main/resources/`.
 
-
-
 <b>TODO: </b>support more configuration formats.
 
 ## Timer
 
 `cn.sissors.hummingbird.runtime.timer`
-
-
 
 Timer is very common in experiment coding. But built-in method in java, that is to get timestamp through `System.currentTimeMillis()` and calculate time cost through substraction, is too complicated. So `Timer` is in order to optimize this process. By involving `Timer`, time cost calculation would change to:
 
@@ -221,8 +209,6 @@ long costTime = Timer.stop("experiment");
 ```
 
 For easy to read, we implement a `format(long time)` function to convert a long number into time format such as `5232 -> 5.232, 8285232 -> 2:18:05.232`. You can use this tool by `Timer.toString(String name)` also.
-
-
 
 Another way to use timer is through Java annotation which is `@TimerRecord(name)`. This is only used for a method and after running, there would be a new timer called `name` stored in `Timer`. It's shown below:
 
@@ -273,13 +259,9 @@ Besides, when using annotation way to record time, add AspectJ plugin to `pom.xm
 
 `cn.sissors.hummingbird.runtime.namespace`
 
-
-
 `NameManager` is a global tool to distribute distinct names for application under the specified namespace. 
 
-
-
-### How to use?
+### How to use
 
 ```java
 // applying for default namespace
@@ -301,24 +283,18 @@ NameManager.uniqueName("main", name);
 
 Besides, use `UNIQUE_NAME_LENGTH(int UNIQUE_NAME_LENGTH)` and `MAX_LOOP_ROUND(long MAX_CHECKING_ROUND)` to set manager.
 
-
-
 <b>TODO: </b>
 
-- use other ways to ensure 100% no-duplicate;
-- support custom name format.
+  - use other ways to ensure 100% no-duplicate;
+  - support custom name format.
 
 ## ExecutionReport
 
 `cn.sissors.hummingbird.runtime.report`
 
-
-
 `ExecutionReport` is used to store running status of program. It's in key-value format and supports operations like regex search, lambda function `forEach(BiConsumer)`.
 
-
-
-### How to use?
+### How to use
 
 ```java
 // creation
@@ -406,6 +382,3 @@ report.merge(report2).print();
 └───────────────────┴────────────┘
 */
 ```
-
-
-

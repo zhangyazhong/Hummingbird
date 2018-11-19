@@ -1,6 +1,7 @@
 package cn.sissors.hummingbird.collect;
 
 import cn.sissors.hummingbird.annotions.CanIgnoreReturnValue;
+import cn.sissors.hummingbird.exceptions.ContainerRuntimeException;
 import cn.sissors.hummingbird.exceptions.DataLoadingException;
 import cn.sissors.hummingbird.exceptions.DataPersistenceException;
 import com.google.common.collect.Lists;
@@ -296,7 +297,7 @@ public abstract class TableContainer<R, C, V> implements Cloneable, Serializable
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
-        throw new RuntimeException("the types of table don't support to clone");
+        throw new ContainerRuntimeException("the types of table don't support to clone");
     }
 
     public String getHeaderName() {

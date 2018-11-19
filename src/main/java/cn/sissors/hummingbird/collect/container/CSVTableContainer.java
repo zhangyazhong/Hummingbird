@@ -389,12 +389,13 @@ public class CSVTableContainer<R, C, V> extends TableContainer<R, C, V> {
         return connection;
     }
 
+    @SuppressWarnings("WeakerAccess")
     static class RemoteProfile {
         static class RemoteServer {
-            String host;
-            int port;
-            String user;
-            String password;
+            protected String host;
+            protected int port;
+            protected String user;
+            protected String password;
 
             private RemoteServer(String host, int port, String user, String password) {
                 this.host = host;
@@ -403,19 +404,19 @@ public class CSVTableContainer<R, C, V> extends TableContainer<R, C, V> {
                 this.password = password;
             }
 
-            static RemoteServer fromProfile(RemoteProfile profile) {
+            protected static RemoteServer fromProfile(RemoteProfile profile) {
                 return new RemoteServer(profile.host, profile.port, profile.user, profile.password);
             }
         }
 
-        String user;
-        String password;
-        String host;
-        int port;
-        String path;
-        String fileDir;
-        String fileName;
-        RemoteServer remoteServer;
+        protected String user;
+        protected String password;
+        protected String host;
+        protected int port;
+        protected String path;
+        protected String fileDir;
+        protected String fileName;
+        protected RemoteServer remoteServer;
 
         private RemoteProfile(
                 String user, String password, String host, int port, String path, String fileDir, String fileName) {
@@ -438,7 +439,7 @@ public class CSVTableContainer<R, C, V> extends TableContainer<R, C, V> {
          * @param url url remote address
          * @return true or false
          */
-        static boolean isLegal(String url) {
+        protected static boolean isLegal(String url) {
             String legalPattern = ".+(\\..+)?@.+(:(\\d)+)?:.+";
             Pattern pattern = Pattern.compile(legalPattern);
             return pattern.matcher(url).matches();
@@ -456,7 +457,7 @@ public class CSVTableContainer<R, C, V> extends TableContainer<R, C, V> {
          * @param url remote address in the form of <b>"user.password@host:port:path-to-file.csv"</b>
          * @return a remote profile to describe file location
          */
-        static RemoteProfile resolve(String url) throws NetworkTransferException {
+        protected static RemoteProfile resolve(String url) throws NetworkTransferException {
             if (!RemoteProfile.isLegal(url)) {
                 throw new NetworkTransferException("illegal remote address: " + url);
             }

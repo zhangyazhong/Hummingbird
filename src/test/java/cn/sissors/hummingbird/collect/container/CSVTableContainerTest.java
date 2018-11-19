@@ -209,8 +209,4 @@ public class CSVTableContainerTest {
         Thread.sleep(1000);
         csvTableContainer.load("scidb.he@10.141.211.91:22:/tmp/ada/exp/exp20/accurate_result_168_504_24.csv").print();
     }
-
-    @After
-    public void printTimeCost() {
-    }
 }
