@@ -6,10 +6,7 @@ import cn.sissors.hummingbird.exceptions.DataLoadingException;
 import cn.sissors.hummingbird.exceptions.DataPersistenceException;
 import com.google.common.collect.ImmutableMap;
 import org.json.JSONObject;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 
 import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 
@@ -191,5 +188,29 @@ public class CSVTableContainerTest {
                 new CSVTableContainer<>("time", String.class, String.class, String.class);
         csvTableContainer.load("scidb.he@10.141.211.91:22:/tmp/ada/exp/exp19/resample_result_20.csv").print();
         csvTableContainer.load("./persistence/simple-container.csv").print();
+    }
+
+    @Test
+    @Ignore
+    public void testRemoteCache() throws DataLoadingException, InterruptedException {
+        CSVTableContainer<String, String, String> csvTableContainer =
+                new CSVTableContainer<>("time", String.class, String.class, String.class);
+        csvTableContainer.load("scidb.he@10.141.211.91:22:/tmp/ada/exp/exp20/accurate_result_24_168_6.csv").print();
+        Thread.sleep(1000);
+        csvTableContainer.load("scidb.he@10.141.211.91:22:/tmp/ada/exp/exp20/accurate_result_24_312_12.csv").print();
+        Thread.sleep(1000);
+        csvTableContainer.load("scidb.he@10.141.211.91:22:/tmp/ada/exp/exp20/accurate_result_48_72_1.csv").print();
+        Thread.sleep(1000);
+        csvTableContainer.load("scidb.he@10.141.211.91:22:/tmp/ada/exp/exp20/accurate_result_168_192_1.csv").print();
+        Thread.sleep(1000);
+        csvTableContainer.load("scidb.he@10.141.211.91:22:/tmp/ada/exp/exp20/accurate_result_168_312_6.csv").print();
+        Thread.sleep(1000);
+        csvTableContainer.load("scidb.he@10.141.211.91:22:/tmp/ada/exp/exp20/accurate_result_168_456_12.csv").print();
+        Thread.sleep(1000);
+        csvTableContainer.load("scidb.he@10.141.211.91:22:/tmp/ada/exp/exp20/accurate_result_168_504_24.csv").print();
+    }
+
+    @After
+    public void printTimeCost() {
     }
 }

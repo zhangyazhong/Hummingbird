@@ -27,10 +27,10 @@ public class ResultUnit implements Parsable<ResultUnit> {
         for (String unit : units) {
             String key = unit.split("=")[0].trim();
             String value = unit.split("=")[1].trim();
-            if (key.equals("r") || key.equals("result")) {
+            if ("r".equals(key) || "result".equals(key)) {
                 this.result = Double.valueOf(value);
             }
-            if (key.equals("e") || key.equals("error")) {
+            if ("e".equals(key) || "error".equals(key)) {
                 this.error = Double.valueOf(value);
             }
         }

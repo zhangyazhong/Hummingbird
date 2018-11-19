@@ -10,7 +10,7 @@
 
     <groupId>cn.sissors</groupId>
     <artifactId>hummingbird</artifactId>
-    <version>1.0-Eta</version>
+    <version>1.0-Theta</version>
     <packaging>jar</packaging>
 
     <name>Hummingbird</name>
@@ -128,7 +128,7 @@
         <asciitable.version>0.3.2</asciitable.version>
         <org.json.version>20160810</org.json.version>
         <ganymed-ssh2.version>build210</ganymed-ssh2.version>
-        <aspectj.version>1.9.2</aspectj.version>
+        <aspectj.version>1.8.13</aspectj.version>
     </properties>
 
     <dependencies>
@@ -198,6 +198,7 @@
                     <execution>
                         <goals>
                             <goal>compile</goal>
+                            <goal>test-compile</goal>
                         </goals>
                     </execution>
                 </executions>

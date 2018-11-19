@@ -3,6 +3,8 @@ package cn.sissors.hummingbird.runtime.timer;
 import cn.sissors.hummingbird.runtime.namespace.NameManager;
 import org.junit.Test;
 
+import static org.junit.Assert.*;
+
 /**
  * @author zyz
  * @version 2018-10-29
@@ -14,11 +16,13 @@ public class TimerTest {
         Thread.sleep(2000);
         Timer.stop("test");
         System.out.println(Timer.toString("test"));
+        assertTrue(Timer.getTime("test") >= 2000);
     }
 
     @Test
     public void testFormat() {
         System.out.println(Timer.format(8285232L));
+        assertEquals(Timer.format(8285232L), "2:18:05.232");
     }
 
     @Test
@@ -28,6 +32,8 @@ public class TimerTest {
         Timer.start(timer.name());
         Thread.sleep(1000);
         System.out.println(Timer.format(timer.time()));
+        assertTrue(timer.time() >= 2000);
+
     }
 
     @Test
@@ -37,6 +43,6 @@ public class TimerTest {
         Timer.start();
         Thread.sleep(1000);
         System.out.println(Timer.format(Timer.getTime()));
+        assertTrue(Timer.getTime() >= 2000);
     }
-
 }

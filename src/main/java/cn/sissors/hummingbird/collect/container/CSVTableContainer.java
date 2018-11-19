@@ -10,6 +10,7 @@ import cn.sissors.hummingbird.exceptions.DataPersistenceException;
 import cn.sissors.hummingbird.exceptions.IllegalValueTypeException;
 import cn.sissors.hummingbird.exceptions.NetworkTransferException;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Contract;
@@ -35,6 +36,7 @@ import java.util.regex.Pattern;
  */
 public class CSVTableContainer<R, C, V> extends TableContainer<R, C, V> {
     private final static String LOCAL_STORAGE_DIR = "./persistence/";
+    private final static Map<RemoteProfile.RemoteServer, Connection> remoteConnectionCache;
 
     private String SEPARATOR = "|";
     private String NEW_LINE = "\r\n";
@@ -57,6 +59,7 @@ public class CSVTableContainer<R, C, V> extends TableContainer<R, C, V> {
             //noinspection ResultOfMethodCallIgnored
             storageDir.mkdirs();
         }
+        remoteConnectionCache = Maps.newConcurrentMap();
     }
 
     @SuppressWarnings("unchecked")
@@ -130,7 +133,7 @@ public class CSVTableContainer<R, C, V> extends TableContainer<R, C, V> {
      *
      * <p>For different new line character under different systems, set it through NEW_LINE(String).
      *
-     * <p>The pattern for remote path is <b>"user.password@server:port:path-to-file.csv"</b>.
+     * <p>The pattern for remote path is <b>"user.password@host:port:path-to-file.csv"</b>.
      *
      * <p>e.g.
      * <p>1. hadoop.123@master:22:~/csv-data/result.csv
@@ -176,7 +179,7 @@ public class CSVTableContainer<R, C, V> extends TableContainer<R, C, V> {
      * are requested for supporting by PARSERS or implementing the
      * {@link cn.sissors.hummingbird.collect.feature.Parsable} interface.
      *
-     * <p>The pattern for remote path is <b>"user.password@server:port:path-to-file.csv"</b>.
+     * <p>The pattern for remote path is <b>"user.password@host:port:path-to-file.csv"</b>.
      *
      * <p>e.g.
      * <p>1. hadoop.123@master:22:~/csv-data/result.csv
@@ -342,66 +345,94 @@ public class CSVTableContainer<R, C, V> extends TableContainer<R, C, V> {
     }
 
     private void upload(RemoteProfile profile) throws NetworkTransferException {
-        Connection connection = null;
         try {
-            connection = new Connection(profile.server, profile.port);
-            connection.connect();
-            if (connection.authenticateWithPassword(profile.user, profile.password)) {
-                SCPClient scpClient = connection.createSCPClient();
-                scpClient.put(LOCAL_STORAGE_DIR() + profile.fileName, profile.fileDir);
-            }
+            SCPClient scpClient = getSCPClient(profile);
+            scpClient.put(LOCAL_STORAGE_DIR() + profile.fileName, profile.fileDir);
         } catch (IOException e) {
             throw new NetworkTransferException(e.getMessage());
-        } finally {
-            if (connection != null) {
-                connection.close();
-            }
         }
     }
 
     private File download(RemoteProfile profile) throws NetworkTransferException {
-        Connection connection = null;
         try {
-            connection = new Connection(profile.server, profile.port);
-            connection.connect();
-            if (connection.authenticateWithPassword(profile.user, profile.password)) {
-                SCPClient scpClient = connection.createSCPClient();
-                scpClient.get(profile.path, LOCAL_STORAGE_DIR());
-            }
+            SCPClient scpClient = getSCPClient(profile);
+            scpClient.get(profile.path, LOCAL_STORAGE_DIR());
             return new File(LOCAL_STORAGE_DIR() + profile.fileName);
         } catch (IOException e) {
             throw new NetworkTransferException(e.getMessage());
-        } finally {
-            if (connection != null) {
-                connection.close();
-            }
         }
     }
 
+    private SCPClient getSCPClient(RemoteProfile profile) throws NetworkTransferException {
+        Exception _e = new Exception("server connection failed");
+        for (int k = 0; k < 2; k++) {
+            try {
+                if (!remoteConnectionCache.containsKey(profile.remoteServer)) {
+                    Connection connection = createConnection(profile);
+                    remoteConnectionCache.put(profile.remoteServer, connection);
+                }
+                Connection connection = remoteConnectionCache.get(profile.remoteServer);
+                return connection.createSCPClient();
+            } catch (IOException | NetworkTransferException e) {
+                _e = e;
+            }
+        }
+        throw new NetworkTransferException(_e.getMessage());
+    }
+
+    private Connection createConnection(RemoteProfile profile) throws IOException, NetworkTransferException {
+        Connection connection = new Connection(profile.host, profile.port);
+        connection.connect();
+        if (!connection.authenticateWithPassword(profile.user, profile.password)) {
+            throw new NetworkTransferException("authentication failed");
+        }
+        return connection;
+    }
+
     static class RemoteProfile {
+        static class RemoteServer {
+            String host;
+            int port;
+            String user;
+            String password;
+
+            private RemoteServer(String host, int port, String user, String password) {
+                this.host = host;
+                this.port = port;
+                this.user = user;
+                this.password = password;
+            }
+
+            static RemoteServer fromProfile(RemoteProfile profile) {
+                return new RemoteServer(profile.host, profile.port, profile.user, profile.password);
+            }
+        }
+
         String user;
         String password;
-        String server;
+        String host;
         int port;
         String path;
         String fileDir;
         String fileName;
+        RemoteServer remoteServer;
 
         private RemoteProfile(
-                String user, String password, String server, int port, String path, String fileDir, String fileName) {
+                String user, String password, String host, int port, String path, String fileDir, String fileName) {
             this.user = user;
             this.password = password;
-            this.server = server;
+            this.host = host;
             this.port = port;
             this.path = path;
             this.fileDir = fileDir;
             this.fileName = fileName;
+            this.remoteServer = RemoteServer.fromProfile(this);
         }
 
         /**
-         * Check whether the url is a legal profile referring remote server.
+         * Check whether the url is a legal profile referring remote host.
          *
-         * <p>The legal pattern of remote path is <b>"user.password@server:port:path-to-file.csv"</b>,
+         * <p>The legal pattern of remote path is <b>"user.password@host:port:path-to-file.csv"</b>,
          * which password and port can be omitted with default empty and 22, respectively.
          *
          * @param url url remote address
@@ -416,13 +447,13 @@ public class CSVTableContainer<R, C, V> extends TableContainer<R, C, V> {
         /**
          * Resolve url to a profile with necessary attributes.
          *
-         * <p>The pattern of remote path is <b>"user.password@server:port:path-to-file.csv"</b>.
+         * <p>The pattern of remote path is <b>"user.password@host:port:path-to-file.csv"</b>.
          *
          * <p>e.g.
          * <p>1. hadoop.123@master:22:~/csv-data/result.csv
          * <p>2. hadoop@master:~/csv-data/result.csv (with no password and default port 22)
          *
-         * @param url remote address in the form of <b>"user.password@server:port:path-to-file.csv"</b>
+         * @param url remote address in the form of <b>"user.password@host:port:path-to-file.csv"</b>
          * @return a remote profile to describe file location
          */
         static RemoteProfile resolve(String url) throws NetworkTransferException {
@@ -433,15 +464,15 @@ public class CSVTableContainer<R, C, V> extends TableContainer<R, C, V> {
             String user = userWithPassword.split("\\.")[0].trim();
             String password = userWithPassword.split("\\.").length > 1 ?
                     StringUtils.substringAfter(userWithPassword, user + ".").trim() : "";
-            String serverWithPortAndPath = url.split("@")[1].trim();
-            String server = serverWithPortAndPath.split(":")[0].trim();
-            int port = serverWithPortAndPath.split(":").length > 2 ?
-                    Integer.valueOf(serverWithPortAndPath.split(":")[1]) : 22;
-            String path = serverWithPortAndPath.split(":").length > 2 ?
-                    serverWithPortAndPath.split(":")[2] : serverWithPortAndPath.split(":")[1];
+            String hostWithPortAndPath = url.split("@")[1].trim();
+            String host = hostWithPortAndPath.split(":")[0].trim();
+            int port = hostWithPortAndPath.split(":").length > 2 ?
+                    Integer.valueOf(hostWithPortAndPath.split(":")[1]) : 22;
+            String path = hostWithPortAndPath.split(":").length > 2 ?
+                    hostWithPortAndPath.split(":")[2] : hostWithPortAndPath.split(":")[1];
             String fileDir = StringUtils.substringBeforeLast(path, "/");
             String fileName = StringUtils.substringAfterLast(path, "/");
-            return new RemoteProfile(user, password, server, port, path, fileDir, fileName);
+            return new RemoteProfile(user, password, host, port, path, fileDir, fileName);
         }
     }
 }

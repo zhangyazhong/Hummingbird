@@ -137,10 +137,7 @@ For pretty showing, we can use `sort()` to make rows and columns in order:
 └──────────────────────────┴─────────────────────────┴─────────────────────────┘
 ```
 
-<b>TODO:</b>
-
-- cache ssh connections temporarily to speed up remote transformation performance;
-- support more authentication methods for ssh.
+<b>TODO:</b>support more authentication methods for ssh.
 
 ## Configuration 
 
@@ -263,6 +260,7 @@ Besides, when using annotation way to record time, add AspectJ plugin to `pom.xm
         <execution>
             <goals>
                 <goal>compile</goal>
+                <goal>test-compile</goal>
             </goals>
         </execution>
     </executions>
