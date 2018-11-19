@@ -226,10 +226,49 @@ For easy to read, we implement a `format(long time)` function to convert a long 
 
 
 
-<b>TODO: </b>
+Another way to use timer is through Java annotation which is `@TimerRecord(name)`. This is only used for a method and after running, there would be a new timer called `name` stored in `Timer`. It's shown below:
 
-- use annotations to make code more modular;
-- record time based on time point, not timer.
+```java
+@TimerRecord("sleep_period")
+private void sleep(long time) throws InterruptedException {
+    Thread.sleep(time);
+}
+
+@Test
+public void testTimerReport() throws InterruptedException {
+    sleep(2000L);
+    System.out.println(Timer.getTime("sleep_period"));
+}
+```
+
+Besides, when using annotation way to record time, add AspectJ plugin to `pom.xml`.
+
+```xml
+<plugin>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>aspectj-maven-plugin</artifactId>
+    <version>1.10</version>
+    <configuration>
+        <complianceLevel>1.8</complianceLevel>
+        <source>1.8</source>
+        <aspectLibraries>
+            <aspectLibrary>
+                <groupId>cn.sissors</groupId>
+                <artifactId>hummingbird</artifactId>
+            </aspectLibrary>
+        </aspectLibraries>
+    </configuration>
+    <executions>
+        <execution>
+            <goals>
+                <goal>compile</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+```
+
+<b>TODO: </b>record time based on time point, not timer.
 
 ## NameManager
 
