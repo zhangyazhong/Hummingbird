@@ -10,7 +10,7 @@
 
     <groupId>cn.sissors</groupId>
     <artifactId>hummingbird</artifactId>
-    <version>1.0-Iota</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>Hummingbird</name>

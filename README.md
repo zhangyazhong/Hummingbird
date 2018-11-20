@@ -3,6 +3,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/cc52bf9d3a9448a58eed051ddff57220)](https://app.codacy.com/app/zhangyazhong/Hummingbird?utm_source=github.com&utm_medium=referral&utm_content=zhangyazhong/Hummingbird&utm_campaign=Badge_Grade_Dashboard)
 [![Build Status](https://travis-ci.org/zhangyazhong/Hummingbird.svg?branch=master)](https://travis-ci.org/zhangyazhong/Hummingbird)
 [![codecov](https://codecov.io/gh/zhangyazhong/Hummingbird/branch/master/graph/badge.svg)](https://codecov.io/gh/zhangyazhong/Hummingbird)
+[![Language](https://img.shields.io/badge/language-java8-red.svg)](https://github.com/zhangyazhong/Hummingbird)
 
 Hummingbird provides lots of easy-to-use tools for research experiment and contains parts shown as follows:
 - a series of collections for table data handling, persistence and loading;
@@ -10,6 +11,18 @@ Hummingbird provides lots of easy-to-use tools for research experiment and conta
 - a useful tool to record time cost of code block running;
 - a name manager to generate and manage names;
 - execution report generation with regex supported.
+
+## Link with Hummingbird
+
+Hummingbird artifacts are hosted in Maven Central. You can add a Maven dependency with the following coordinates:
+
+```xml
+<dependency>
+    <groupId>cn.sissors</groupId>
+    <artifactId>hummingbird</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
 
 ## Collections
 
@@ -51,14 +64,14 @@ public class ResultUnit implements Parsable<ResultUnit> {
 }
 ```
 
-The steps to create an container object is very simple:
+The steps to create a container object is very simple:
 
 ```java
 CSVTableContainer<String, String, ResultUnit> csvTableContainer =
         new CSVTableContainer<>("time", String.class, String.class, ResultUnit.class);
 ```
 
-Notice, you need to specify generic types explicitly to make parser work. Then fill up some data cells:
+Notice, you need to specify generic types explicitly to make parser work. Then fill up with some data cells:
 
 ```java
 csvTableContainer.push("2:00", "result_1", new ResultUnit(2.5, 0.3));
@@ -285,7 +298,7 @@ Besides, use `UNIQUE_NAME_LENGTH(int UNIQUE_NAME_LENGTH)` and `MAX_LOOP_ROUND(lo
 <b>TODO: </b>
 
 - use other ways to ensure 100% no-duplicate;
-- support custom name format.
+- support customize name format.
 
 ## ExecutionReport
 
