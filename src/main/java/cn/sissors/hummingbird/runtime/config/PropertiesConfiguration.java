@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -21,7 +22,7 @@ public abstract class PropertiesConfiguration extends Configuration {
             try {
                 InputStreamReader inputStreamReader;
                 if (config.toLowerCase().startsWith("classpath")) {
-                    inputStreamReader = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(StringUtils.substringAfter(config, ":").trim()), StandardCharsets.UTF_8);
+                    inputStreamReader = new InputStreamReader(Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream(StringUtils.substringAfter(config, ":").trim())), StandardCharsets.UTF_8);
                 } else {
                     File file = new File(config);
                     if (!file.exists()) {

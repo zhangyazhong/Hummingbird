@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="OFF" monitorInterval="600">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%p] - %m%n"/>
+        </Console>
+        <File name="SingleRuntime" fileName="/tmp/hummingbird/log/log.out" append="false">
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%p] - %m%n"/>
+        </File>
+        <RollingRandomAccessFile name="RollingFile" fileName="/tmp/hummingbird/log/hummingbird.log" filePattern="/tmp/hummingbird/log/hummingbird-%d{yyyy-MM-dd}_%i.log">
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%p] - %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="20"/>
+        </RollingRandomAccessFile>
+        <Async name="Async">
+            <AppenderRef ref="SingleRuntime"/>
+            <AppenderRef ref="RollingFile"/>
+        </Async>
+    </Appenders>
+    <Loggers>
+        <Root level="all">
+            <Appender-Ref ref="Console"/>
+            <Appender-Ref ref="SingleRuntime"/>
+            <Appender-Ref ref="RollingFile"/>
+        </Root>
+    </Loggers>
+</Configuration>

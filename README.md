@@ -11,6 +11,7 @@ Hummingbird provides lots of easy-to-use tools for research experiment and conta
 - a useful tool to record time cost of code block running;
 - a name manager to generate and manage names;
 - execution report generation with regex supported.
+- an auto-configure logging utility based on Log4j 2 
 
 ## Link with Hummingbird
 
@@ -290,7 +291,7 @@ When the process involving that name has finished, you can use `release(String n
 NameManager.release(name);
 
 // release for custom namespace
-NameManager.uniqueName("main", name);
+NameManager.release("main", name);
 ```
 
 Besides, use `UNIQUE_NAME_LENGTH(int UNIQUE_NAME_LENGTH)` and `MAX_LOOP_ROUND(long MAX_CHECKING_ROUND)` to set manager.
@@ -394,3 +395,59 @@ report.merge(report2).print();
 └───────────────────┴────────────┘
 */
 ```
+
+# Logger
+
+`cn.sissors.hummingbird.runtime.logger`
+
+Logger configuration is often a troublesome task, especially writen in XML format. `Logger` is an auto-configure logging utility based on Log4j 2 and helps you to build your own logging module within few code statements. 
+
+Pre-configured logger support 4 logging levels:
+
+- debug,
+- info,
+- warn,
+- error. 
+
+Logger contains 3 appenders, which are console, single runtime file and rolling file. Besides, single runtime file and rolling file are writen asynchronously to improve performace. 
+
+## How to use
+
+```java
+// with customized XML configuration at classpath
+Logger.log(Logger.Level.DEBUG, "test debug");
+Logger.debug("test debug");
+
+// without XML configuration, invoke Logger.build() first
+Logger.build("/tmp/hummingbird/log/", "hummingbird");
+Logger.log(Logger.Level.DEBUG, "test debug");
+Logger.debug("test debug");
+```
+
+Output log is in this format ([%d{yyyy-MM-dd HH:mm:ss.SSS}][%p] - [class.method:line-number] %m%n)
+
+```shell
+[2018-11-29 15:57:28.803] [DEBUG] - [App.main:12] debug: Hello world!
+[2018-11-29 15:57:28.808] [INFO] - [App.main:13] info: Hello world!
+[2018-11-29 15:57:28.808] [WARN] - [App.main:14] warn: Hello world!
+[2018-11-29 15:57:28.808] [ERROR] - [App.main:15] error: Hello world!
+```
+
+Furthermore, if log string contains `\n` or `\r\n`, logger would split it to multiple lines automatically.
+
+```java
+Logger.build();
+Logger.debug("Hello\r\nWorld!");
+```
+
+Output is
+
+```shell
+[2018-11-29 16:01:00.676] [DEBUG] - [App.main:16] Hello
+[2018-11-29 16:01:00.676] [DEBUG] - [App.main:16] World!
+```
+
+<b>TODO:</b>
+
+- provide more customized options for logging;
+- support for logger rebuilding.
