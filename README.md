@@ -179,7 +179,20 @@ system.name = ConfigTest
 
 ```
 
-In this toolkit, we wrote a sub-class called `PropertiesConfiguration`, which impletment `load` method to load `.properties` file into memory. If you need to use it, just create a class to extend `PropertiesConfiguration` and implement `locations()` method to return the path list of your configurations.
+`.json` file is a JSON object:
+
+```json
+{
+    "system": {
+        "name": "ConfigTest",
+        "core": 4,
+        "memory": 8g
+    }
+}
+
+```
+
+In this toolkit, we wrote a sub-class called `PropertiesConfiguration`, which implemented `load` method to load `.properties` file into memory. If you need to use it, just create a class to extend `PropertiesConfiguration` and implement `locations()` method to return the path list of your configurations.
 
 There is an example:
 
@@ -196,7 +209,12 @@ public class HummingbirdConfiguration extends PropertiesConfiguration {
 
 The keyword `classpath` is refer to the root path of the project. e.g. If the project is built by maven, then `classpath` would refer to the directory of `/src/main/resources/`.
 
-<b>TODO: </b>support more configuration formats.
+Besides, we implemented `JSONConfiguration` to support `.json` files. As shown above, keys in JSON object will be flatted with dot, such as `{"system": {"name": "ConfigTest"}}` will be loaded as `{"system.name": "ConfigTest"}`. The way to use `JSONConfiguration` is the same as `PropertiesConfiguration`.
+
+<b>TODO: </b>
+
+- support more configuration formats;
+- support to export JSON object in `JSONConfiguration`.
 
 ## Timer
 

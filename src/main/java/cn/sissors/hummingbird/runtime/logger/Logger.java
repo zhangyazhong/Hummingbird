@@ -77,7 +77,7 @@ public class Logger {
      * Set output directory of log file and build logger programmatically.
      *
      * @param outputDirectory the output directory of log file
-     * @param outputFilename  the output fine name of log file
+     * @param outputFilename  the output file name of log file
      */
     public static void build(@NotNull String outputDirectory, @NotNull String outputFilename) {
         if (PROGRAMMATICALLY_BUILT && !LOG_OUTPUT_DIRECTORY.equals(outputDirectory)) {
@@ -91,7 +91,7 @@ public class Logger {
      * Set output directory of log file and log level for console and global. Finally, build logger programmatically.
      *
      * @param outputDirectory the output directory of log file
-     * @param outputFilename  the output fine name of log file
+     * @param outputFilename  the output file name of log file
      * @param console         the log level for console
      * @param global          the log level for global
      */

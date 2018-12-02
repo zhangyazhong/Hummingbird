@@ -1,0 +1,13 @@
+{
+  "system": {
+    "core": 4,
+    "memory": "8g",
+    "name": "ConfigTest",
+    "ref": null,
+    "network": {
+      "async": true,
+      "location": "上海",
+      "bandwidth": 54.0
+    }
+  }
+}

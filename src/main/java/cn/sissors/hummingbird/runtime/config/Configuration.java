@@ -109,6 +109,28 @@ public abstract class Configuration {
     }
 
     /**
+     * Get the setting based on key in boolean.
+     *
+     * @param key the specified key
+     * @return the setting value
+     */
+    public Boolean getBoolean(String key) {
+        return Boolean.parseBoolean(configs.get(key));
+    }
+
+    /**
+     * Returns the value to which the specified key is mapped, or
+     * {@code defaultValue} if this map contains no mapping for the key in boolean.
+     *
+     * @param key the key whose associated value is to be returned
+     * @param defaultValue the default mapping of the key
+     * @return the setting value
+     */
+    public Boolean getBooleanOrDefault(String key, boolean defaultValue) {
+        return Boolean.parseBoolean(getOrDefault(key, String.valueOf(defaultValue)));
+    }
+
+    /**
      * Returns a {@link Set} view of the keys contained in this map.
      *
      * @return a set view of the keys contained in this map
