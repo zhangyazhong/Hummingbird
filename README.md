@@ -186,7 +186,7 @@ system.name = ConfigTest
     "system": {
         "name": "ConfigTest",
         "core": 4,
-        "memory": 8g
+        "memory": "8g"
     }
 }
 
@@ -241,7 +241,7 @@ long costTime = Timer.stop("experiment");
 
 For easy to read, we implement a `format(long time)` function to convert a long number into time format such as `5232 -> 5.232, 8285232 -> 2:18:05.232`. You can use this tool by `Timer.toString(String name)` also.
 
-Another way to use timer is through Java annotation which is `@TimerRecord(name)`. This is only used for a method and after running, there would be a new timer called `name` stored in `Timer`. It's shown below:
+Another way to use timer is through Java annotation which is `@TimerRecord(name)`. This is only used for methods and after running, there would be a new timer called `name` stored in `Timer`. It's shown below:
 
 ```java
 @TimerRecord("sleep_period")
@@ -414,7 +414,7 @@ report.merge(report2).print();
 */
 ```
 
-# Logger
+## Logger
 
 `cn.sissors.hummingbird.runtime.logger`
 
@@ -429,7 +429,7 @@ Pre-configured logger support 4 logging levels:
 
 Logger contains 3 appenders, which are console, single runtime file and rolling file. Besides, single runtime file and rolling file are writen asynchronously to improve performace. 
 
-## How to use
+### How to use
 
 ```java
 // with customized XML configuration at classpath
