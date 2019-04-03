@@ -1,9 +1,13 @@
 package cn.sissors.hummingbird.runtime.timer;
 
+import com.google.common.collect.Lists;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * The aspect working for {@link TimerRecord} annotation.
@@ -23,11 +27,11 @@ public class TimerRecordAspect {
 
     @Before(value = "reportTimePointcut(timerRecord)", argNames = "timerRecord")
     public void monitorTimeStart(TimerRecord timerRecord) {
-        Timer.create(timerRecord.value());
+        TimerManager.create(timerRecord.value());
     }
 
     @After(value = "reportTimePointcut(timerRecord)", argNames = "timerRecord")
     public void monitorTimeStop(TimerRecord timerRecord) {
-        Timer.stop(timerRecord.value());
+        TimerManager.stop(timerRecord.value());
     }
 }

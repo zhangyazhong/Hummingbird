@@ -12,37 +12,34 @@ import static org.junit.Assert.*;
 public class TimerTest {
     @Test
     public void testTimer() throws InterruptedException {
-        Timer.create("test");
+        Timer timer = new Timer("test");
+        timer.start();
         Thread.sleep(2000);
-        Timer.stop("test");
-        System.out.println(Timer.toString("test"));
-        assertTrue(Timer.getTime("test") >= 2000);
+        timer.stop();
+        System.out.println(timer.toString());
+        assertTrue(timer.time() >= 2000);
     }
 
     @Test
     public void testFormat() {
-        System.out.println(Timer.format(8285232L));
+        System.out.println(TimerManager.format(8285232L));
         assertEquals(Timer.format(8285232L), "2:18:05.232");
     }
 
     @Test
-    public void testTimer0() throws InterruptedException {
-        Timer timer = Timer.create(NameManager.uniqueName());
-        Thread.sleep(1000);
-        Timer.start(timer.name());
-        Thread.sleep(1000);
-        System.out.println(Timer.format(timer.time()));
-        assertTrue(timer.time() >= 1000 && Timer.getTime() <= 2000);
-
+    public void testFormat2() {
+        System.out.println(TimerManager.format(285232L));
+        assertEquals(Timer.format(285232L), "4:45.232");
     }
 
     @Test
-    public void testTimer1() throws InterruptedException {
-        Timer.create();
+    public void testTimer0() throws InterruptedException {
+        Timer timer = new Timer(NameManager.uniqueName());
         Thread.sleep(1000);
-        Timer.start();
+        timer.start();
         Thread.sleep(1000);
-        System.out.println(Timer.format(Timer.getTime()));
-        assertTrue(Timer.getTime() >= 1000 && Timer.getTime() <= 2000);
+        timer.stop();
+        System.out.println(Timer.format(timer.time()));
+        assertTrue(timer.time() >= 1000 && timer.time() <= 2000);
     }
 }

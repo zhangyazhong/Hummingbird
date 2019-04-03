@@ -232,14 +232,14 @@ long finishTime = System.currentTimeMillis();
 long costTime = finishTime - startTime;
 
 // new
-Timer.create("experiment");
+TimerManager.create("experiment");
 /*
  some code...
  */
-long costTime = Timer.stop("experiment");
+long costTime = TimerManager.stop("experiment").time();
 ```
 
-For easy to read, we implement a `format(long time)` function to convert a long number into time format such as `5232 -> 5.232, 8285232 -> 2:18:05.232`. You can use this tool by `Timer.toString(String name)` also.
+For easy to read, we implement a `format(long time)` function to convert a long number into time format such as `5232 -> 5.232, 8285232 -> 2:18:05.232`. You can use this tool by `TimerManager.format(String name)` also.
 
 Another way to use timer is through Java annotation which is `@TimerRecord(name)`. This is only used for methods and after running, there would be a new timer called `name` stored in `Timer`. It's shown below:
 
@@ -252,7 +252,7 @@ private void sleep(long time) throws InterruptedException {
 @Test
 public void testTimerReport() throws InterruptedException {
     sleep(2000L);
-    System.out.println(Timer.getTime("sleep_period"));
+    System.out.println(TimerManager.format("sleep_period"));
 }
 ```
 
@@ -282,6 +282,27 @@ Besides, when using annotation way to record time, add AspectJ plugin to `pom.xm
         </execution>
     </executions>
 </plugin>
+```
+
+Another new feature of `Timer` is that it now supports for aggregation functions on time cost. 
+
+Suppose you executed a method many times and after that you want to know the average or maximum time cost of the method. 
+The older way is store time cost of each round of executions, and calculate average or maximum result.
+To achieve a simpler approach, we implemented a built-in interface in `TimerManager.agg()`. Here's how to use it.
+
+```java
+@TimerRecord("sleep_period")
+private void sleep(long time) throws InterruptedException {
+    Thread.sleep(time);
+}
+
+@Test
+public void testTimerReport() throws InterruptedException {
+    for (int i = 0; i < 20; i++) {
+        sleep(RandomUtils.nextInt() % 100);
+    }
+    System.out.println(TimerManager.agg("sleep_period", TimerAggregation.avg));
+}
 ```
 
 <b>TODO: </b>record time based on time point, not timer.

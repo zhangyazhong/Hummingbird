@@ -1,134 +1,33 @@
 package cn.sissors.hummingbird.runtime.timer;
 
-import cn.sissors.hummingbird.annotions.CanIgnoreReturnValue;
-import com.google.common.collect.Maps;
-
-import java.util.Map;
-
 /**
- * Timer is a tool to record time cost for a piece of code.
+ * Timer is a basic class to record time.
+ * Its main attributes are {@code startTime} and {@code stopTime}, to record when started and stopped respectively.
  *
  * @author zyz
  * @version 2018-10-23
  */
 public class Timer {
-    public final static String EMPTY_NAME = "";
-
-    private static Map<String, Timer> timerMap;
     private String name;
     private Long startTime;
     private Long stopTime;
 
-    static {
-        timerMap = Maps.newConcurrentMap();
-    }
-
-    private Timer(String name) {
+    protected Timer(String name) {
         this.name = name;
     }
 
     /**
-     * Create a timer with an empty name.
-     *
-     * @return a timer
+     * Start the timer.
      */
-    @CanIgnoreReturnValue
-    public static Timer create() {
-        return create(EMPTY_NAME);
+    public void start() {
+        this.startTime = System.currentTimeMillis();
     }
 
     /**
-     * Create a timer with a given name.
-     *
-     * @param name the name of timer
-     * @return a timer
+     * Stop the timer.
      */
-    @CanIgnoreReturnValue
-    public static Timer create(String name) {
-        Timer timer = new Timer(name);
-        timerMap.put(timer.name, timer);
-        Timer.start(timer.name);
-        return timer;
-    }
-
-    /**
-     * Start a timer with the empty name.
-     *
-     * <p>Actually, a timer will be started automatically once it has been created.
-     */
-    public static void start() {
-        Timer.start(EMPTY_NAME);
-    }
-
-    /**
-     * Start a timer with the specified name.
-     *
-     * <p>Actually, a timer will be started automatically once it has been created.
-     *
-     * @param name the specified name
-     */
-    public static void start(String name) {
-        Timer timer = timerMap.get(name);
-        timer.startTime = System.currentTimeMillis();
-    }
-
-    /**
-     * Stop a timer with the empty name.
-     *
-     * @return the recorded time of the timer
-     */
-    @CanIgnoreReturnValue
-    public static Long stop() {
-        return Timer.stop(EMPTY_NAME);
-    }
-
-    /**
-     * Stop a timer with the specified name.
-     *
-     * @param name the specified name
-     * @return the recorded time of the timer
-     */
-    @CanIgnoreReturnValue
-    public static Long stop(String name) {
-        Timer timer = timerMap.get(name);
-        timer.stopTime = System.currentTimeMillis();
-        return timer.stopTime - timer.startTime;
-    }
-
-    /**
-     * Get recorded time of a timer with the empty name.
-     *
-     * @return the time accurate to milliseconds
-     */
-    public static Long getTime() {
-        return Timer.getTime(EMPTY_NAME);
-    }
-
-    /**
-     * Get recorded time of a timer with the specified name.
-     *
-     * @param name the timer's name
-     * @return the time accurate to milliseconds
-     */
-    public static Long getTime(String name) {
-        if (!timerMap.containsKey(name)) {
-            return -1L;
-        }
-        Timer timer = timerMap.get(name);
-        return timer.time();
-    }
-
-    /**
-     * Format the time with the specified name into human readable style.
-     *
-     * <p>The default format is <i>HH:mm:ss.SSS</i>
-     *
-     * @param name the timer's name
-     * @return the string in human readable style
-     */
-    public static String toString(String name) {
-        Timer timer = timerMap.get(name);
-        return timer.toString();
+    public void stop() {
+        this.stopTime = System.currentTimeMillis();
     }
 
     /**
@@ -138,7 +37,7 @@ public class Timer {
      */
     public Long time() {
         if (this.stopTime == null || this.stopTime <= 0) {
-            stop(this.name);
+            return -1L;
         }
         return this.stopTime - this.startTime;
     }
@@ -150,6 +49,11 @@ public class Timer {
      */
     public String name() {
         return name;
+    }
+
+    @Override
+    public String toString() {
+        return format(time());
     }
 
     /**
@@ -172,9 +76,5 @@ public class Timer {
         } else {
             return String.format("%d.%03d", ss, SSS);
         }
-    }
-
-    public String toString() {
-        return Timer.format(time());
     }
 }

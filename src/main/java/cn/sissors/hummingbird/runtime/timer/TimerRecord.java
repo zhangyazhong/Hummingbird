@@ -22,5 +22,5 @@ public @interface TimerRecord {
      *
      * @return timer name, default {@code Timer.EMPTY_NAME}
      */
-    String value() default Timer.EMPTY_NAME;
+    String value() default TimerManager.EMPTY_NAME;
 }
