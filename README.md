@@ -70,6 +70,9 @@ The steps to create a container object is very simple:
 ```java
 CSVTableContainer<String, String, ResultUnit> csvTableContainer =
         new CSVTableContainer<>("time", String.class, String.class, ResultUnit.class);
+// or
+CSVTableContainer<String, String, ResultUnit> csvTableContainer =
+        new CSVTableContainer<String, String, ResultUnit>("time") {};
 ```
 
 Notice, you need to specify generic types explicitly to make parser work. Then fill up with some data cells:

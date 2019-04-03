@@ -11,6 +11,7 @@ import cn.sissors.hummingbird.exceptions.IllegalValueTypeException;
 import cn.sissors.hummingbird.exceptions.NetworkTransferException;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.google.common.reflect.TypeToken;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Contract;
@@ -62,20 +63,26 @@ public class CSVTableContainer<R, C, V> extends TableContainer<R, C, V> {
         remoteConnectionCache = Maps.newConcurrentMap();
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "UnstableApiUsage"})
     public CSVTableContainer() {
         super("");
-        this.ROW_TYPE = (Class<R>) String.class;
-        this.COLUMN_TYPE = (Class<C>) String.class;
-        this.VALUE_TYPE = (Class<V>) String.class;
+        TypeToken<R> rTypeToken = new TypeToken<R>(getClass()) {};
+        TypeToken<C> cTypeToken = new TypeToken<C>(getClass()) {};
+        TypeToken<V> vTypeToken = new TypeToken<V>(getClass()) {};
+        this.ROW_TYPE = rTypeToken.getType().getClass().isAssignableFrom(Class.class) ? (Class<R>) rTypeToken.getType() : (Class<R>) String.class;
+        this.COLUMN_TYPE = cTypeToken.getType().getClass().isAssignableFrom(Class.class) ? (Class<C>) cTypeToken.getType() : (Class<C>) String.class;
+        this.VALUE_TYPE = vTypeToken.getType().getClass().isAssignableFrom(Class.class) ? (Class<V>) vTypeToken.getType() : (Class<V>) String.class;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "UnstableApiUsage"})
     public CSVTableContainer(String headerName) {
         super(headerName);
-        this.ROW_TYPE = (Class<R>) String.class;
-        this.COLUMN_TYPE = (Class<C>) String.class;
-        this.VALUE_TYPE = (Class<V>) String.class;
+        TypeToken<R> rTypeToken = new TypeToken<R>(getClass()) {};
+        TypeToken<C> cTypeToken = new TypeToken<C>(getClass()) {};
+        TypeToken<V> vTypeToken = new TypeToken<V>(getClass()) {};
+        this.ROW_TYPE = rTypeToken.getType().getClass().isAssignableFrom(Class.class) ? (Class<R>) rTypeToken.getType() : (Class<R>) String.class;
+        this.COLUMN_TYPE = cTypeToken.getType().getClass().isAssignableFrom(Class.class) ? (Class<C>) cTypeToken.getType() : (Class<C>) String.class;
+        this.VALUE_TYPE = vTypeToken.getType().getClass().isAssignableFrom(Class.class) ? (Class<V>) vTypeToken.getType() : (Class<V>) String.class;
     }
 
     public CSVTableContainer(Class<R> ROW_TYPE, Class<C> COLUMN_TYPE, Class<V> VALUE_TYPE) {
