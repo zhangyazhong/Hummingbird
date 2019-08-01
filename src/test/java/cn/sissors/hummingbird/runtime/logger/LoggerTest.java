@@ -25,6 +25,18 @@ public class LoggerTest {
     }
 
     @Test
+    public void trace() {
+        Logger.trace("test trace");
+        assertTrue(true);
+    }
+
+    @Test
+    public void trace1() {
+        Logger.trace("test trace %d", 2);
+        assertTrue(true);
+    }
+
+    @Test
     public void debug() {
         Logger.debug("test debug");
         assertTrue(true);
@@ -73,8 +85,20 @@ public class LoggerTest {
     }
 
     @Test
+    public void fatal() {
+        Logger.fatal("test fatal");
+        assertTrue(true);
+    }
+
+    @Test
+    public void fatal1() {
+        Logger.fatal("test fatal %d", 2);
+        assertTrue(true);
+    }
+
+    @Test
     public void testNewLine() {
-        Logger.error("test error\r\ntest error2");
+        Logger.error("test error\ntest error2");
         assertTrue(true);
     }
 }
