@@ -28,9 +28,9 @@ public class ResultTimeline implements Parsable<ResultTimeline> {
         if (text.length() < 1) {
             return this;
         }
-        this.year = Integer.valueOf(text.split("-")[0].trim());
-        this.month = Integer.valueOf(text.split("-")[1].trim());
-        this.day = Integer.valueOf(text.split("-")[2].trim());
+        this.year = Integer.parseInt(text.split("-")[0].trim());
+        this.month = Integer.parseInt(text.split("-")[1].trim());
+        this.day = Integer.parseInt(text.split("-")[2].trim());
         return this;
     }
 
