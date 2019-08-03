@@ -31,7 +31,7 @@ public class Logger {
     /**
      * A series of logging levels.
      */
-    enum Level {
+    public enum Level {
         ALL(org.apache.logging.log4j.Level.ALL),
         DEBUG(org.apache.logging.log4j.Level.DEBUG),
         INFO(org.apache.logging.log4j.Level.INFO),
