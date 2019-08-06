@@ -25,7 +25,7 @@ public class ExecutionReport implements Serializable {
     private Map<String, Object> reports;
 
     private ExecutionReport() {
-        reports = Maps.newLinkedHashMap();
+        reports = Maps.newConcurrentMap();
     }
 
     private ExecutionReport(Map<String, Object> reports) {
