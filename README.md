@@ -287,7 +287,7 @@ Besides, when using annotation way to record time, add AspectJ plugin to `pom.xm
 </plugin>
 ```
 
-For Java 11 support, just set both `<complianceLevel>` and `<source>` to 11, shown as follow.
+For Java 11, just set both `<complianceLevel>` and `<source>` to 11, shown as follow.
 
 ```xml
 <plugin>
@@ -480,12 +480,15 @@ report.merge(report2).print();
 
 Logger configuration is often a troublesome task, especially writen in XML format. `Logger` is an auto-configure logging utility based on Log4j 2 and helps you to build your own logging module within few code statements. 
 
-Pre-configured logger support 4 logging levels:
+Pre-configured logger support 7 logging levels:
 
+- all,
+- trace,
 - debug,
 - info,
 - warn,
-- error. 
+- error,
+- fatal.
 
 Logger contains 3 appenders, which are console, single runtime file and rolling file. Besides, single runtime file and rolling file are writen asynchronously to improve performace. 
 
