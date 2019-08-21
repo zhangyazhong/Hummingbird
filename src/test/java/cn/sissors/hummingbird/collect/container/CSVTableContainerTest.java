@@ -2,8 +2,10 @@ package cn.sissors.hummingbird.collect.container;
 
 import cn.sissors.hummingbird.bean.ResultTimeline;
 import cn.sissors.hummingbird.bean.ResultUnit;
+import cn.sissors.hummingbird.collect.TableContainer;
 import cn.sissors.hummingbird.exceptions.DataLoadingException;
 import cn.sissors.hummingbird.exceptions.DataPersistenceException;
+import cn.sissors.hummingbird.exceptions.NetworkTransferException;
 import com.google.common.collect.ImmutableMap;
 import org.json.JSONObject;
 import org.junit.*;
@@ -179,6 +181,47 @@ public class CSVTableContainerTest {
         csvTableContainer.merge(csvTableContainer2);
         csvTableContainer.filter(rowKey -> rowKey.compareTo("4:00") < 0, columnKey -> true);
         csvTableContainer.print();
+    }
+
+    @Test
+    public void testContainerMisc() {
+        CSVTableContainer<String, String, String> csvTableContainer = new CSVTableContainer<>();
+        System.out.println("local directory: " + csvTableContainer.LOCAL_STORAGE_DIR());
+        System.out.println(csvTableContainer.NEW_LINE("\n").NEW_LINE());
+        System.out.println("separator: " + csvTableContainer.SEPARATOR(",").SEPARATOR());
+        System.out.println("empty character: " + csvTableContainer.NULL_CHARACTER_DISPLAY("(empty)").NULL_CHARACTER_DISPLAY());
+        System.out.println("container count: " + TableContainer.CONTAINER_COUNT());
+    }
+
+    @Test
+    public void testSetCellType() {
+        CSVTableContainer<String, String, String> csvTableContainer = new CSVTableContainer<>();
+        csvTableContainer.setColumnType(String.class);
+        csvTableContainer.setRowType(String.class);
+        csvTableContainer.setValueType(String.class);
+    }
+
+    @Test
+    public void testGetContainerMap() {
+        CSVTableContainer<String, String, String> csvTableContainer = new CSVTableContainer<>();
+        csvTableContainer.push("row", "column", "value");
+        csvTableContainer.rowMap();
+        csvTableContainer.columnMap();
+        csvTableContainer.singleRow("column");
+        csvTableContainer.singleColumn("row");
+    }
+
+    @Test
+    public void testRemoteProfile() {
+        try {
+            CSVTableContainer.RemoteProfile legalRemoteProfile
+                    = CSVTableContainer.RemoteProfile.resolve("hadoop.123@master:22:~/csv-data/result.csv");
+            System.out.println(legalRemoteProfile);
+            CSVTableContainer.RemoteProfile illegalRemoteProfile
+                    = CSVTableContainer.RemoteProfile.resolve("hadoop.123@@master:22:~/csv-data/result.csv");
+            System.out.println(illegalRemoteProfile);
+        } catch (NetworkTransferException ignored) {
+        }
     }
 
     @Test

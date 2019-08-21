@@ -64,11 +64,12 @@ public abstract class TableContainer<R, C, V> implements Cloneable, Serializable
      * Set customized NULL_CHARACTER_DISPLAY to replace NULL value when printing.
      *
      * @param NULL_CHARACTER_DISPLAY the character replaced
-     * @return the character replaced for NULL
+     * @return container itself (easy to invoke under chain-style)
      */
     @CanIgnoreReturnValue
-    public String NULL_CHARACTER_DISPLAY(String NULL_CHARACTER_DISPLAY) {
-        return this.NULL_CHARACTER_DISPLAY = NULL_CHARACTER_DISPLAY;
+    public TableContainer NULL_CHARACTER_DISPLAY(String NULL_CHARACTER_DISPLAY) {
+        this.NULL_CHARACTER_DISPLAY = NULL_CHARACTER_DISPLAY;
+        return this;
     }
 
     /**

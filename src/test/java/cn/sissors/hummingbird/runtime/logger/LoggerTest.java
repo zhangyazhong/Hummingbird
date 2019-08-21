@@ -101,4 +101,12 @@ public class LoggerTest {
         Logger.error("test error\ntest error2");
         assertTrue(true);
     }
+
+    @Test
+    public void testZBuild() {
+        Logger.build();
+        Logger.build(Logger.Level.INFO, Logger.Level.DEBUG);
+        Logger.build("/tmp/hummingbird/log/", "hummingbird.log");
+        Logger.build("/tmp/hummingbird/log/", "hummingbird.log", Logger.Level.INFO, Logger.Level.DEBUG);
+    }
 }
