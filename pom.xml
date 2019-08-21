@@ -10,7 +10,7 @@
 
     <groupId>cn.sissors</groupId>
     <artifactId>hummingbird</artifactId>
-    <version>1.4.0-Alpha</version>
+    <version>1.4.0-Delta</version>
     <packaging>jar</packaging>
 
     <name>Hummingbird</name>
