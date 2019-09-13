@@ -263,12 +263,48 @@ Besides, when using annotation way to record time, add AspectJ plugin to `pom.xm
 
 ```xml
 <plugin>
-    <groupId>org.codehaus.mojo</groupId>
+    <groupId>com.nickwongdev</groupId>
     <artifactId>aspectj-maven-plugin</artifactId>
-    <version>1.10</version>
+    <version>1.12.1</version>
     <configuration>
         <complianceLevel>1.8</complianceLevel>
         <source>1.8</source>
+        <aspectLibraries>
+            <aspectLibrary>
+                <groupId>cn.sissors</groupId>
+                <artifactId>hummingbird</artifactId>
+            </aspectLibrary>
+        </aspectLibraries>
+    </configuration>
+    <executions>
+        <execution>
+            <goals>
+                <goal>compile</goal>
+                <goal>test-compile</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+```
+
+For Java 11, just set both `<complianceLevel>` and `<source>` to 11, shown as follow.
+
+```xml
+<plugin>
+    <groupId>com.nickwongdev</groupId>
+    <artifactId>aspectj-maven-plugin</artifactId>
+    <version>1.12.1</version>
+    <configuration>
+        <complianceLevel>11</complianceLevel>
+        <source>11</source>
+        <sources>
+            <source>
+                <basedir>src/main/java</basedir>
+            </source>
+            <source>
+                <basedir>src/test/java</basedir>
+            </source>
+        </sources>
         <aspectLibraries>
             <aspectLibrary>
                 <groupId>cn.sissors</groupId>
@@ -444,12 +480,15 @@ report.merge(report2).print();
 
 Logger configuration is often a troublesome task, especially writen in XML format. `Logger` is an auto-configure logging utility based on Log4j 2 and helps you to build your own logging module within few code statements. 
 
-Pre-configured logger support 4 logging levels:
+Pre-configured logger support 7 logging levels:
 
+- all,
+- trace,
 - debug,
 - info,
 - warn,
-- error. 
+- error,
+- fatal.
 
 Logger contains 3 appenders, which are console, single runtime file and rolling file. Besides, single runtime file and rolling file are writen asynchronously to improve performace. 
 

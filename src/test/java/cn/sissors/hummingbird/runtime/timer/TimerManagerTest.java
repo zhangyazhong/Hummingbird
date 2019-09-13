@@ -4,8 +4,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import java.util.Random;
-
 import static org.junit.Assert.*;
 
 /**

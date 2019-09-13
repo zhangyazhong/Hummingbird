@@ -21,8 +21,12 @@ public abstract class PropertiesConfiguration extends Configuration {
         for (String config : locations()) {
             try {
                 InputStreamReader inputStreamReader;
-                if (config.toLowerCase().startsWith("classpath")) {
-                    inputStreamReader = new InputStreamReader(Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream(StringUtils.substringAfter(config, ":").trim())), StandardCharsets.UTF_8);
+                if (config.toLowerCase().startsWith("classpath:")) {
+                    InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(StringUtils.substringAfter(config, ":").trim());
+                    if (inputStream == null) {
+                        continue;
+                    }
+                    inputStreamReader = new InputStreamReader((inputStream), StandardCharsets.UTF_8);
                 } else {
                     File file = new File(config);
                     if (!file.exists()) {

@@ -11,6 +11,10 @@ import java.util.List;
 public class HummingbirdJSONConfiguration extends JSONConfiguration {
     @Override
     public List<String> locations() {
-        return ImmutableList.of("classpath: default.json");
+        return ImmutableList.of(
+                "classpath: default.json",
+                "classpath: missing.json",
+                "/etc/cn.sissors.hummingbird.json"
+        );
     }
 }

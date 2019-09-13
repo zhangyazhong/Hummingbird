@@ -70,13 +70,13 @@ public class NameManager {
      * @return a unique name under namespace
      */
     public static String uniqueName(String namespace) {
-        long loop = 0L;
-        String name = null;
-        while (loop++ < MAX_CHECKING_ROUND && (name == null || (NAME_RECORDS.containsKey(namespace) && NAME_RECORDS.get(namespace).contains(name)))) {
-            name = String.format("%s", RandomStringUtils.randomAlphanumeric(UNIQUE_NAME_LENGTH));
-        }
         if (!NAME_RECORDS.containsKey(namespace)) {
             NAME_RECORDS.put(namespace, Collections.newSetFromMap(Maps.newConcurrentMap()));
+        }
+        long loop = 0L;
+        String name = null;
+        while (name == null || (loop++ < MAX_CHECKING_ROUND && NAME_RECORDS.get(namespace).contains(name))) {
+            name = String.format("%s", RandomStringUtils.randomAlphanumeric(UNIQUE_NAME_LENGTH));
         }
         NAME_RECORDS.get(namespace).add(name);
         return namespace.equals(DEFAULT_NAMESPACE) ? name : String.format("%s.%s", namespace, name);

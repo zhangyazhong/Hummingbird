@@ -80,7 +80,7 @@ public abstract class JSONConfiguration extends Configuration {
         for (String config : locations()) {
             try {
                 File file;
-                if (config.toLowerCase().startsWith("classpath")) {
+                if (config.toLowerCase().startsWith("classpath:")) {
                     file = new File(Objects.requireNonNull(this.getClass().getResource("/")).getPath() + StringUtils.substringAfter(config, ":").trim());
                 } else {
                     file = new File(config);

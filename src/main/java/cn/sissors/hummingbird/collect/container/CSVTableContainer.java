@@ -447,7 +447,7 @@ public class CSVTableContainer<R, C, V> extends TableContainer<R, C, V> {
          * @return true or false
          */
         protected static boolean isLegal(String url) {
-            String legalPattern = ".+(\\..+)?@.+(:(\\d)+)?:.+";
+            String legalPattern = "[^.]+(\\.[^@]+)?@[^@]+(:(\\d)+)?:.+";
             Pattern pattern = Pattern.compile(legalPattern);
             return pattern.matcher(url).matches();
         }
@@ -475,12 +475,18 @@ public class CSVTableContainer<R, C, V> extends TableContainer<R, C, V> {
             String hostWithPortAndPath = url.split("@")[1].trim();
             String host = hostWithPortAndPath.split(":")[0].trim();
             int port = hostWithPortAndPath.split(":").length > 2 ?
-                    Integer.valueOf(hostWithPortAndPath.split(":")[1]) : 22;
+                    Integer.parseInt(hostWithPortAndPath.split(":")[1]) : 22;
             String path = hostWithPortAndPath.split(":").length > 2 ?
                     hostWithPortAndPath.split(":")[2] : hostWithPortAndPath.split(":")[1];
             String fileDir = StringUtils.substringBeforeLast(path, "/");
             String fileName = StringUtils.substringAfterLast(path, "/");
             return new RemoteProfile(user, password, host, port, path, fileDir, fileName);
+        }
+
+        @Override
+        public String toString() {
+            String userWithPassword = user + (password.length() > 0 ? "." + password : "");
+            return String.format("%s@%s:%d:%s/%s", userWithPassword, host, port, fileDir, fileName);
         }
     }
 }

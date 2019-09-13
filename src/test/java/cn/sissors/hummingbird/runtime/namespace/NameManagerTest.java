@@ -41,4 +41,10 @@ public class NameManagerTest {
         NameManager.release("main", mainName);
         assertTrue(mainName.contains("main."));
     }
+
+    @Test
+    public void test4ManagerSetting() {
+        NameManager.MAX_LOOP_ROUND(0);
+        NameManager.UNIQUE_NAME_LENGTH(1);
+    }
 }

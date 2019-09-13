@@ -1,10 +1,14 @@
 package cn.sissors.hummingbird.runtime.config;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Contract;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Configuration class is used to simplify the process of loading multiple configurations into memory.
@@ -26,6 +30,7 @@ public abstract class Configuration {
      * @param key the specified key
      * @return the setting value
      */
+    @Contract(pure = true)
     public String get(String key) {
         return configs.get(key);
     }
@@ -34,10 +39,11 @@ public abstract class Configuration {
      * Returns the value to which the specified key is mapped, or
      * {@code defaultValue} if this map contains no mapping for the key.
      *
-     * @param key the key whose associated value is to be returned
+     * @param key          the key whose associated value is to be returned
      * @param defaultValue the default mapping of the key
      * @return the setting value
      */
+    @Contract(pure = true)
     public String getOrDefault(String key, String defaultValue) {
         return configs.getOrDefault(key, defaultValue);
     }
@@ -48,7 +54,8 @@ public abstract class Configuration {
      * @param key the specified key
      * @return the setting value
      */
-    public Integer getInt(String key) {
+    @Contract(pure = true)
+    public int getInt(String key) {
         return Integer.parseInt(configs.get(key));
     }
 
@@ -56,11 +63,12 @@ public abstract class Configuration {
      * Returns the value to which the specified key is mapped, or
      * {@code defaultValue} if this map contains no mapping for the key in integer.
      *
-     * @param key the key whose associated value is to be returned
+     * @param key          the key whose associated value is to be returned
      * @param defaultValue the default mapping of the key
      * @return the setting value
      */
-    public Integer getIntOrDefault(String key, int defaultValue) {
+    @Contract(pure = true)
+    public int getIntOrDefault(String key, int defaultValue) {
         return Integer.parseInt(getOrDefault(key, String.valueOf(defaultValue)));
     }
 
@@ -70,7 +78,8 @@ public abstract class Configuration {
      * @param key the specified key
      * @return the setting value
      */
-    public Double getDouble(String key) {
+    @Contract(pure = true)
+    public double getDouble(String key) {
         return Double.parseDouble(configs.get(key));
     }
 
@@ -78,11 +87,12 @@ public abstract class Configuration {
      * Returns the value to which the specified key is mapped, or
      * {@code defaultValue} if this map contains no mapping for the key in double.
      *
-     * @param key the key whose associated value is to be returned
+     * @param key          the key whose associated value is to be returned
      * @param defaultValue the default mapping of the key
      * @return the setting value
      */
-    public Double getDoubleOrDefault(String key, double defaultValue) {
+    @Contract(pure = true)
+    public double getDoubleOrDefault(String key, double defaultValue) {
         return Double.parseDouble(getOrDefault(key, String.valueOf(defaultValue)));
     }
 
@@ -92,7 +102,8 @@ public abstract class Configuration {
      * @param key the specified key
      * @return the setting value
      */
-    public Long getLong(String key) {
+    @Contract(pure = true)
+    public long getLong(String key) {
         return Long.parseLong(configs.get(key));
     }
 
@@ -100,11 +111,12 @@ public abstract class Configuration {
      * Returns the value to which the specified key is mapped, or
      * {@code defaultValue} if this map contains no mapping for the key in long.
      *
-     * @param key the key whose associated value is to be returned
+     * @param key          the key whose associated value is to be returned
      * @param defaultValue the default mapping of the key
      * @return the setting value
      */
-    public Long getLongOrDefault(String key, long defaultValue) {
+    @Contract(pure = true)
+    public long getLongOrDefault(String key, long defaultValue) {
         return Long.parseLong(getOrDefault(key, String.valueOf(defaultValue)));
     }
 
@@ -114,7 +126,8 @@ public abstract class Configuration {
      * @param key the specified key
      * @return the setting value
      */
-    public Boolean getBoolean(String key) {
+    @Contract(pure = true)
+    public boolean getBoolean(String key) {
         return Boolean.parseBoolean(configs.get(key));
     }
 
@@ -122,12 +135,108 @@ public abstract class Configuration {
      * Returns the value to which the specified key is mapped, or
      * {@code defaultValue} if this map contains no mapping for the key in boolean.
      *
-     * @param key the key whose associated value is to be returned
+     * @param key          the key whose associated value is to be returned
      * @param defaultValue the default mapping of the key
      * @return the setting value
      */
-    public Boolean getBooleanOrDefault(String key, boolean defaultValue) {
+    @Contract(pure = true)
+    public boolean getBooleanOrDefault(String key, boolean defaultValue) {
         return Boolean.parseBoolean(getOrDefault(key, String.valueOf(defaultValue)));
+    }
+
+    /**
+     * Get the setting based on key in string list.
+     *
+     * @param key the specified key
+     * @return the setting value
+     */
+    @Contract(pure = true)
+    public List<String> getList(String key) {
+        return getList(key, ",");
+    }
+
+    /**
+     * Get the setting based on key in string list.
+     *
+     * @param key       the specified key
+     * @param separator the separator to split value
+     * @return the setting value
+     */
+    @Contract(pure = true)
+    public List<String> getList(String key, String separator) {
+        separator = separator.replaceAll("\\|", "\\\\|");
+        return Lists.newArrayList(configs.get(key).split(separator)).stream()
+                .map(String::trim)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Get the setting based on key in integer list.
+     *
+     * @param key the specified key
+     * @return the setting value
+     */
+    @Contract(pure = true)
+    public List<Integer> getListInt(String key) {
+        return getListInt(key, ",");
+    }
+
+    /**
+     * Get the setting based on key in integer list.
+     *
+     * @param key       the specified key
+     * @param separator the separator to split value
+     * @return the setting value
+     */
+    @Contract(pure = true)
+    public List<Integer> getListInt(String key, String separator) {
+        return getList(key, separator).stream().map(Integer::parseInt).collect(Collectors.toList());
+    }
+
+    /**
+     * Get the setting based on key in double list.
+     *
+     * @param key the specified key
+     * @return the setting value
+     */
+    @Contract(pure = true)
+    public List<Double> getListDouble(String key) {
+        return getListDouble(key, ",");
+    }
+
+    /**
+     * Get the setting based on key in double list.
+     *
+     * @param key       the specified key
+     * @param separator the separator to split value
+     * @return the setting value
+     */
+    @Contract(pure = true)
+    public List<Double> getListDouble(String key, String separator) {
+        return getList(key, separator).stream().map(Double::parseDouble).collect(Collectors.toList());
+    }
+
+    /**
+     * Get the setting based on key in long list.
+     *
+     * @param key the specified key
+     * @return the setting value
+     */
+    @Contract(pure = true)
+    public List<Long> getListLong(String key) {
+        return getListLong(key, ",");
+    }
+
+    /**
+     * Get the setting based on key in double list.
+     *
+     * @param key       the specified key
+     * @param separator the separator to split value
+     * @return the setting value
+     */
+    @Contract(pure = true)
+    public List<Long> getListLong(String key, String separator) {
+        return getList(key, separator).stream().map(Long::parseLong).collect(Collectors.toList());
     }
 
     /**
@@ -135,6 +244,7 @@ public abstract class Configuration {
      *
      * @return a set view of the keys contained in this map
      */
+    @Contract(pure = true)
     public Set<String> keys() {
         return configs.keySet();
     }
@@ -142,11 +252,21 @@ public abstract class Configuration {
     /**
      * Set a value to the specified key.
      *
-     * @param key the specified key
+     * @param key   the specified key
      * @param value the setting value
      */
     public void set(String key, String value) {
         configs.put(key, value);
+    }
+
+    /**
+     * Set a series of values in list to the specified key.
+     *
+     * @param key    the specified key
+     * @param values the setting value
+     */
+    public <T> void set(String key, List<T> values) {
+        configs.put(key, StringUtils.join(values, ","));
     }
 
     /**

@@ -33,10 +33,12 @@ public class Logger {
      */
     public enum Level {
         ALL(org.apache.logging.log4j.Level.ALL),
+        TRACE(org.apache.logging.log4j.Level.TRACE),
         DEBUG(org.apache.logging.log4j.Level.DEBUG),
         INFO(org.apache.logging.log4j.Level.INFO),
         WARN(org.apache.logging.log4j.Level.WARN),
-        ERROR(org.apache.logging.log4j.Level.ERROR);
+        ERROR(org.apache.logging.log4j.Level.ERROR),
+        FATAL(org.apache.logging.log4j.Level.FATAL);
 
         private org.apache.logging.log4j.Level level;
 
@@ -55,8 +57,8 @@ public class Logger {
     private static boolean PROGRAMMATICALLY_BUILT = false;
     private static String LOG_OUTPUT_DIRECTORY = "null";
     private static String LOG_OUTPUT_FILENAME = "hummingbird";
-    private static Level CONSOLE_LEVEL = Level.DEBUG;
-    private static Level GLOBAL_LEVEL = Level.ALL;
+    private static Level CONSOLE_LEVEL = Level.INFO;
+    private static Level GLOBAL_LEVEL = Level.DEBUG;
 
     static {
         initialize();
@@ -88,6 +90,23 @@ public class Logger {
     }
 
     /**
+     * Set log level for console and global and build logger programmatically.
+     *
+     * @param console the log level for console
+     * @param global  the log level for global
+     */
+    public static void build(Level console, Level global) {
+        String LOG_OUTPUT_DIRECTORY_DEFAULT = "/tmp/hummingbird/log/";
+        if (PROGRAMMATICALLY_BUILT && (!LOG_OUTPUT_DIRECTORY.equals(LOG_OUTPUT_DIRECTORY_DEFAULT)
+                || (console != null && CONSOLE_LEVEL != console) || (global != null && GLOBAL_LEVEL != global))) {
+            LOG_OUTPUT_DIRECTORY = LOG_OUTPUT_DIRECTORY_DEFAULT;
+            CONSOLE_LEVEL = console != null ? console : CONSOLE_LEVEL;
+            GLOBAL_LEVEL = global != null ? global : GLOBAL_LEVEL;
+            programmaticallyBuild();
+        }
+    }
+
+    /**
      * Set output directory of log file and log level for console and global. Finally, build logger programmatically.
      *
      * @param outputDirectory the output directory of log file
@@ -97,7 +116,8 @@ public class Logger {
      */
     public static void build(@NotNull String outputDirectory, @NotNull String outputFilename, Level console, Level global) {
         if (PROGRAMMATICALLY_BUILT
-                && (!LOG_OUTPUT_DIRECTORY.equals(outputDirectory) || (console != null && CONSOLE_LEVEL != console) || (global != null && GLOBAL_LEVEL != global))) {
+                && (!LOG_OUTPUT_DIRECTORY.equals(outputDirectory)
+                || (console != null && CONSOLE_LEVEL != console) || (global != null && GLOBAL_LEVEL != global))) {
             LOG_OUTPUT_DIRECTORY = outputDirectory;
             LOG_OUTPUT_FILENAME = outputFilename;
             CONSOLE_LEVEL = console != null ? console : CONSOLE_LEVEL;
@@ -209,6 +229,25 @@ public class Logger {
     }
 
     /**
+     * Logs a message object with {@link Level#TRACE} level.
+     *
+     * @param msg the message to log
+     */
+    public static void trace(Object msg) {
+        log(Level.TRACE, msg);
+    }
+
+    /**
+     * Logs the specified format string and arguments with {@link Level#TRACE} level.
+     *
+     * @param msg  the message to log
+     * @param args arguments referenced by the format specifiers in the format string
+     */
+    public static void trace(@NotNull Object msg, Object... args) {
+        log(Level.TRACE, msg, args);
+    }
+
+    /**
      * Logs a message object with {@link Level#DEBUG} level.
      *
      * @param msg the message to log
@@ -282,5 +321,24 @@ public class Logger {
      */
     public static void error(@NotNull Object msg, Object... args) {
         log(Level.ERROR, msg, args);
+    }
+
+    /**
+     * Logs a message object with {@link Level#FATAL} level.
+     *
+     * @param msg the message to log
+     */
+    public static void fatal(Object msg) {
+        log(Level.FATAL, msg);
+    }
+
+    /**
+     * Logs the specified format string and arguments with {@link Level#FATAL} level.
+     *
+     * @param msg  the message to log
+     * @param args arguments referenced by the format specifiers in the format string
+     */
+    public static void fatal(@NotNull Object msg, Object... args) {
+        log(Level.FATAL, msg, args);
     }
 }

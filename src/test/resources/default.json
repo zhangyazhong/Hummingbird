@@ -1,13 +1,32 @@
 {
-  "system": {
-    "core": 4,
-    "memory": "8g",
-    "name": "ConfigTest",
-    "ref": null,
-    "network": {
-      "async": true,
-      "location": "上海",
-      "bandwidth": 54.0
+    "system": {
+        "core": 4,
+        "memory": "8g",
+        "name": "ConfigTest",
+        "ref": null,
+        "network": {
+            "async": true,
+            "location": "上海",
+            "bandwidth": 54.0
+        },
+        "args": {
+            "a": "hello",
+            "b": "world",
+            "c": 20,
+            "d": "failure",
+            "e": 3.5,
+            "f": 2147483648,
+            "g": ["hello", "world"],
+            "h": "hello | world",
+            "i": [8, 6, 5],
+            "j": "8 | 6 | 5",
+            "k": true,
+            "l": "TrUe",
+            "m": [2.7, 6.5, 4.8],
+            "n": "2.7 | 6.5 | 4.8",
+            "o": "2.7 | 3",
+            "p": [2147483647, 2147483648],
+            "q": "2147483647 | 2147483648"
+        }
     }
-  }
 }
