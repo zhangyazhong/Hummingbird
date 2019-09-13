@@ -398,6 +398,15 @@ public class CSVTableContainer<R, C, V> extends TableContainer<R, C, V> {
 
     @SuppressWarnings("WeakerAccess")
     static class RemoteProfile {
+        protected String user;
+        protected String password;
+        protected String host;
+        protected int port;
+        protected String path;
+        protected String fileDir;
+        protected String fileName;
+        protected RemoteServer remoteServer;
+
         static class RemoteServer {
             protected String host;
             protected int port;
@@ -415,15 +424,6 @@ public class CSVTableContainer<R, C, V> extends TableContainer<R, C, V> {
                 return new RemoteServer(profile.host, profile.port, profile.user, profile.password);
             }
         }
-
-        protected String user;
-        protected String password;
-        protected String host;
-        protected int port;
-        protected String path;
-        protected String fileDir;
-        protected String fileName;
-        protected RemoteServer remoteServer;
 
         private RemoteProfile(
                 String user, String password, String host, int port, String path, String fileDir, String fileName) {

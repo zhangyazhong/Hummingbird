@@ -143,10 +143,4 @@ public class HummingbirdPropertiesConfigurationTest {
                 && IntStream.range(0, (list1.size() + list2.size()) >> 1)
                     .allMatch(idx -> list1.get(idx).doubleValue() - list2.get(idx).doubleValue() <= delta);
     }
-
-    @Test
-    public void testSeparator() {
-        String a = "2.7 | 6.5 | 4.8";
-        System.out.println(StringUtils.join(a.split("\\|"), ","));
-    }
 }

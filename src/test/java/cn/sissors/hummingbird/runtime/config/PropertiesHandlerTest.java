@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author yazhong.zyz
@@ -39,5 +40,6 @@ public class PropertiesHandlerTest {
                 "d", "success_updated",
                 "d_", "success_created"
         ));
+        assertTrue(true);
     }
 }
