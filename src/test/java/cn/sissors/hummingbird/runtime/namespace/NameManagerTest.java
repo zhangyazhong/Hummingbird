@@ -46,5 +46,6 @@ public class NameManagerTest {
     public void test4ManagerSetting() {
         NameManager.MAX_LOOP_ROUND(0);
         NameManager.UNIQUE_NAME_LENGTH(1);
+        assertTrue(true);
     }
 }

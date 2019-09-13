@@ -1,13 +1,9 @@
 package cn.sissors.hummingbird.runtime.timer;
 
-import com.google.common.collect.Lists;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * The aspect working for {@link TimerRecord} annotation.

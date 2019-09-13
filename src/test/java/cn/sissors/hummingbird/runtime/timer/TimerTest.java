@@ -3,7 +3,8 @@ package cn.sissors.hummingbird.runtime.timer;
 import cn.sissors.hummingbird.runtime.namespace.NameManager;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author zyz

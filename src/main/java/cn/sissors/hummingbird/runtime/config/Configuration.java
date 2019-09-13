@@ -32,7 +32,7 @@ public abstract class Configuration {
      */
     @Contract(pure = true)
     public String get(String key) {
-        return configs.get(key);
+        return configs.get(key).trim();
     }
 
     /**
@@ -45,7 +45,7 @@ public abstract class Configuration {
      */
     @Contract(pure = true)
     public String getOrDefault(String key, String defaultValue) {
-        return configs.getOrDefault(key, defaultValue);
+        return configs.getOrDefault(key, defaultValue).trim();
     }
 
     /**
@@ -56,7 +56,7 @@ public abstract class Configuration {
      */
     @Contract(pure = true)
     public int getInt(String key) {
-        return Integer.parseInt(configs.get(key));
+        return Integer.parseInt(get(key));
     }
 
     /**
@@ -80,7 +80,7 @@ public abstract class Configuration {
      */
     @Contract(pure = true)
     public double getDouble(String key) {
-        return Double.parseDouble(configs.get(key));
+        return Double.parseDouble(get(key));
     }
 
     /**
@@ -104,7 +104,7 @@ public abstract class Configuration {
      */
     @Contract(pure = true)
     public long getLong(String key) {
-        return Long.parseLong(configs.get(key));
+        return Long.parseLong(get(key));
     }
 
     /**
@@ -128,7 +128,7 @@ public abstract class Configuration {
      */
     @Contract(pure = true)
     public boolean getBoolean(String key) {
-        return Boolean.parseBoolean(configs.get(key));
+        return Boolean.parseBoolean(get(key));
     }
 
     /**
@@ -164,8 +164,8 @@ public abstract class Configuration {
      */
     @Contract(pure = true)
     public List<String> getList(String key, String separator) {
-        separator = separator.replaceAll("\\|", "\\\\|");
-        return Lists.newArrayList(configs.get(key).split(separator)).stream()
+        String _separator = separator.replaceAll("\\|", "\\\\|");
+        return Lists.newArrayList(configs.get(key).split(_separator)).stream()
                 .map(String::trim)
                 .collect(Collectors.toList());
     }
@@ -259,11 +259,13 @@ public abstract class Configuration {
         configs.put(key, value);
     }
 
+
     /**
      * Set a series of values in list to the specified key.
      *
      * @param key    the specified key
-     * @param values the setting value
+     * @param values values the setting value
+     * @param <T>    the type of elements in the list
      */
     public <T> void set(String key, List<T> values) {
         configs.put(key, StringUtils.join(values, ","));

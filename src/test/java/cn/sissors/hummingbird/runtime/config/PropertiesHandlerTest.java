@@ -6,7 +6,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.Properties;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author yazhong.zyz

@@ -4,7 +4,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author zyz
@@ -108,5 +108,6 @@ public class LoggerTest {
         Logger.build(Logger.Level.INFO, Logger.Level.DEBUG);
         Logger.build("/tmp/hummingbird/log/", "hummingbird.log");
         Logger.build("/tmp/hummingbird/log/", "hummingbird.log", Logger.Level.INFO, Logger.Level.DEBUG);
+        assertTrue(true);
     }
 }

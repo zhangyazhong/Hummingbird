@@ -107,7 +107,7 @@ public class CSVTableContainer<R, C, V> extends TableContainer<R, C, V> {
      * @return separator
      */
     @Contract(pure = true)
-    public String SEPARATOR() {
+    public String separator() {
         return SEPARATOR;
     }
 
@@ -119,7 +119,7 @@ public class CSVTableContainer<R, C, V> extends TableContainer<R, C, V> {
      * @return new line character
      */
     @Contract(pure = true)
-    public String NEW_LINE() {
+    public String newLine() {
         return NEW_LINE;
     }
 
@@ -129,7 +129,7 @@ public class CSVTableContainer<R, C, V> extends TableContainer<R, C, V> {
      * @return local directory
      */
     @Contract(pure = true)
-    public String LOCAL_STORAGE_DIR() {
+    public String localStorageDir() {
         return LOCAL_STORAGE_DIR;
     }
 
@@ -161,13 +161,13 @@ public class CSVTableContainer<R, C, V> extends TableContainer<R, C, V> {
                 FileWriter outputWriter = new FileWriter(outputFile);
                 final StringBuilder outputBuilder = new StringBuilder()
                         .append(getHeaderName())
-                        .append(SEPARATOR())
-                        .append(StringUtils.join(this.columnMap().keySet().toArray(), SEPARATOR()))
-                        .append(NEW_LINE());
+                        .append(separator())
+                        .append(StringUtils.join(this.columnMap().keySet().toArray(), separator()))
+                        .append(newLine());
                 this.rowKeys().forEach(rowKey -> outputBuilder.append(rowKey)
-                        .append(SEPARATOR())
-                        .append(StringUtils.join(this.columnKeys().stream().map(columnKey -> get(rowKey, columnKey)).toArray(), SEPARATOR()))
-                        .append(NEW_LINE()));
+                        .append(separator())
+                        .append(StringUtils.join(this.columnKeys().stream().map(columnKey -> get(rowKey, columnKey)).toArray(), separator()))
+                        .append(newLine()));
                 outputWriter.write(outputBuilder.toString());
                 outputWriter.flush();
                 outputWriter.close();
@@ -204,7 +204,7 @@ public class CSVTableContainer<R, C, V> extends TableContainer<R, C, V> {
             if (RemoteProfile.isLegal(path)) {
                 return loadFromRemote(path);
             }
-            String SEPARATOR_REGEX = SEPARATOR().replaceAll("\\|", "\\\\|");
+            String SEPARATOR_REGEX = separator().replaceAll("\\|", "\\\\|");
             Scanner inputScanner = new Scanner(new File(path));
             String[] headerUnits = inputScanner.nextLine().split(SEPARATOR_REGEX);
             this.clean().setHeaderName(headerUnits[0]);
@@ -306,7 +306,7 @@ public class CSVTableContainer<R, C, V> extends TableContainer<R, C, V> {
      * @return current container
      */
     @CanIgnoreReturnValue
-    public CSVTableContainer<R, C, V> SEPARATOR(String SEPARATOR) {
+    public CSVTableContainer<R, C, V> separator(String SEPARATOR) {
         this.SEPARATOR = SEPARATOR;
         return this;
     }
@@ -318,7 +318,7 @@ public class CSVTableContainer<R, C, V> extends TableContainer<R, C, V> {
      * @return current container
      */
     @CanIgnoreReturnValue
-    public CSVTableContainer<R, C, V> NEW_LINE(String NEW_LINE) {
+    public CSVTableContainer<R, C, V> newLine(String NEW_LINE) {
         this.NEW_LINE = NEW_LINE;
         return this;
     }
@@ -327,7 +327,7 @@ public class CSVTableContainer<R, C, V> extends TableContainer<R, C, V> {
         File csvFile = null;
         try {
             RemoteProfile profile = RemoteProfile.resolve(path);
-            csvFile = new File(LOCAL_STORAGE_DIR() + profile.fileName);
+            csvFile = new File(localStorageDir() + profile.fileName);
             this.persist(csvFile.getAbsolutePath());
             this.upload(profile);
         } catch (NetworkTransferException e) {
@@ -354,7 +354,7 @@ public class CSVTableContainer<R, C, V> extends TableContainer<R, C, V> {
     private void upload(RemoteProfile profile) throws NetworkTransferException {
         try {
             SCPClient scpClient = getSCPClient(profile);
-            scpClient.put(LOCAL_STORAGE_DIR() + profile.fileName, profile.fileDir);
+            scpClient.put(localStorageDir() + profile.fileName, profile.fileDir);
         } catch (IOException e) {
             throw new NetworkTransferException(e.getMessage());
         }
@@ -363,8 +363,8 @@ public class CSVTableContainer<R, C, V> extends TableContainer<R, C, V> {
     private File download(RemoteProfile profile) throws NetworkTransferException {
         try {
             SCPClient scpClient = getSCPClient(profile);
-            scpClient.get(profile.path, LOCAL_STORAGE_DIR());
-            return new File(LOCAL_STORAGE_DIR() + profile.fileName);
+            scpClient.get(profile.path, localStorageDir());
+            return new File(localStorageDir() + profile.fileName);
         } catch (IOException e) {
             throw new NetworkTransferException(e.getMessage());
         }

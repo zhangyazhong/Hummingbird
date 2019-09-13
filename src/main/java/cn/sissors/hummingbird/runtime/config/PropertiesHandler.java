@@ -57,7 +57,7 @@ public class PropertiesHandler {
      *
      * @param path       external location
      * @param properties a {@link java.util.Properties} object
-     * @throws IOException if writing this property list to the specified output stream throws an <tt>IOException</tt>.
+     * @throws IOException if writing this property list to the specified output stream throws an <code>IOException</code>.
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void save(String path, Properties properties) throws IOException {
@@ -74,7 +74,7 @@ public class PropertiesHandler {
      *
      * @param path   external location
      * @param params java map
-     * @throws IOException if writing this property list to the specified output stream throws an <tt>IOException</tt>.
+     * @throws IOException if writing this property list to the specified output stream throws an <code>IOException</code>.
      */
     public static void save(String path, Map<String, String> params) throws IOException {
         Properties properties = new Properties();

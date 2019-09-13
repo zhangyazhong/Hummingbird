@@ -8,7 +8,10 @@ import cn.sissors.hummingbird.exceptions.DataPersistenceException;
 import cn.sissors.hummingbird.exceptions.NetworkTransferException;
 import com.google.common.collect.ImmutableMap;
 import org.json.JSONObject;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.util.Comparator;
 
@@ -202,9 +205,9 @@ public class CSVTableContainerTest {
     @Test
     public void testContainerMisc() {
         CSVTableContainer<String, String, String> csvTableContainer = new CSVTableContainer<>();
-        System.out.println("local directory: " + csvTableContainer.LOCAL_STORAGE_DIR());
-        System.out.println(csvTableContainer.NEW_LINE("\n").NEW_LINE());
-        System.out.println("separator: " + csvTableContainer.SEPARATOR(",").SEPARATOR());
+        System.out.println("local directory: " + csvTableContainer.localStorageDir());
+        System.out.println(csvTableContainer.newLine("\n").newLine());
+        System.out.println("separator: " + csvTableContainer.separator(",").separator());
         System.out.println("empty character: " + csvTableContainer.NULL_CHARACTER_DISPLAY("(empty)").NULL_CHARACTER_DISPLAY());
         System.out.println("container count: " + TableContainer.CONTAINER_COUNT());
     }
