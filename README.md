@@ -10,8 +10,8 @@ Hummingbird provides lots of easy-to-use tools for research experiment and conta
 - multiple solutions for various configuration formats; 
 - a useful tool to record time cost of code block running;
 - a name manager to generate and manage names;
-- execution report generation with regex supported.
-- an auto-configure logging utility based on Log4j 2 
+- execution report generation with regex supported;
+- an auto-configure logging utility based on Log4j 2. 
 
 ## Link with Hummingbird
 
@@ -41,7 +41,7 @@ For table data, the base class is `TableContainer<R, C, V>`. It supports
 - `sort`: sort container based on the dictionary order of row and column keys;
 - `print`: print content on to screen or customized print stream.
 
-Besides, there is a `CSVTableContainer<R, C, V>` that extends from `TableContainer<R, C, V>` which supports to persist and load in csv format
+Besides, there is a `CSVTableContainer<R, C, V>` that extends `TableContainer<R, C, V>` which supports to persist and load in csv format
 
 - `persist`: write data into a csv format file;
 - `load`: load data from a csv format file.
@@ -65,7 +65,7 @@ public class ResultUnit implements Parsable<ResultUnit> {
 }
 ```
 
-The steps to create a container object is very simple:
+The steps to create a container object are very simple:
 
 ```java
 CSVTableContainer<String, String, ResultUnit> csvTableContainer =
@@ -75,7 +75,7 @@ CSVTableContainer<String, String, ResultUnit> csvTableContainer =
         new CSVTableContainer<String, String, ResultUnit>("time") {};
 ```
 
-Notice, you need to specify generic types explicitly to make parser work. Then fill up with some data cells:
+Notice, you need to specify generic types explicitly to make the parser work. Then fill it up with some data cells:
 
 ```java
 csvTableContainer.push("2:00", "result_1", new ResultUnit(2.5, 0.3));

@@ -69,6 +69,11 @@ public class ExecutionReportTest {
     }
 
     @Test
+    public void test2Sort() {
+        report.sort((s1, s2) -> -s1.compareTo(s2)).print();
+    }
+
+    @Test
     public void test2Get() {
         ExecutionReport _report = ExecutionReport.create();
         _report.put("int", 1);

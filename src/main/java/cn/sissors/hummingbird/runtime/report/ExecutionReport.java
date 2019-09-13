@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.ConcurrentModificationException;
 import java.util.Map;
 import java.util.Objects;
@@ -13,10 +14,11 @@ import java.util.function.BiConsumer;
 import java.util.regex.Pattern;
 
 /**
- * ExecutionReport is a tool to store status through running of program.
- * It's in key-value format, like {@link Map}. Besides, it provides a
- * series of operations, such as regex search and lambda <i>forEach</i>
- * to improve convenience.
+ * ExecutionReport is a tool to store execution stats during the running of
+ * program. It's in key-value format, like {@link Map}. Besides, it provides
+ * a series of additional operations, such as regex searching and lambda 
+ * functions ({@link #forEach(BiConsumer)}, {@link #sort(Comparator)}) to
+ * improve convenience.
  *
  * @author zyz
  * @version 2018-10-25
@@ -138,11 +140,32 @@ public class ExecutionReport implements Serializable {
     }
 
     /**
+     * Get the entire report map.
+     *
+     * @return the entire report map
+     */
+    public Map<String, Object> getReport() {
+        return reports;
+    }
+
+    /**
      * Get a sub-report which only contains the given category.
      *
-     * <p>For example, origin report contains <i>(A, 1), (A.a, 2), (A.b, 3), (B, 4), (B.a, 5)</i>.
-     * Then, through <code>getCategory("A")</code>, we will get a sub-report which only contains
-     * <i>(A, 1), (A.a, 2), (A.b, 3)</i>.
+     * <p>For example, the origin report contains 5 elements:
+     * <ul>
+     *     <li><code>(A, 1)</code></li>
+     *     <li><code>(A.a, 2)</code></li>
+     *     <li><code>(A.b, 3)</code></li>
+     *     <li><code>(B, 4)</code></li>
+     *     <li><code>(B.a, 5)</code></li>
+     * </ul>
+     * Then, through <code>getCategory("A")</code>, we will get a new
+     * sub-report which only contains 3 elements:
+     * <ul>
+     *     <li><code>(A, 1)</code></li>
+     *     <li><code>(A.a, 2)</code></li>
+     *     <li><code>(A.b, 3)</code></li>
+     * </ul>
      *
      * @param category the specified category
      * @return a sub-report
@@ -154,9 +177,19 @@ public class ExecutionReport implements Serializable {
     /**
      * Get a sub-report matches the given regex pattern.
      *
-     * <p>For example, origin report contains <i>(T.u.a, 1), (T.u.b, 2), (T.v.a, 3), (T.v.b, 4)</i>.
-     * Then, through <code>search("T\\..+\\.a")</code>, we will get a sub-report which only contains
-     * <i>(T.u.a, 1), (T.v.a, 3)</i>.
+     * <p>For example, the origin report contains 4 elements:
+     * <ul>
+     *     <li><code>(T.u.a, 1)</code></li>
+     *     <li><code>(T.u.b, 2)</code></li>
+     *     <li><code>(T.v.a, 3)</code></li>
+     *     <li><code>(T.v.b, 4)</code></li>
+     * </ul>
+     * Then, through <code>search("T\\..+\\.a")</code>, we will get a
+     * new sub-report which only contains 2 elements:
+     * <ul>
+     *     <li><code>(T.u.a, 1)</code></li>
+     *     <li><code>(T.v.a, 3)</code></li>
+     * </ul>
      *
      * @param pattern the regex formula
      * @return a sub-report
@@ -175,8 +208,8 @@ public class ExecutionReport implements Serializable {
     /**
      * Merge another report into this one.
      *
-     * <p><b>Notice: </b>If there exists duplicate key, the value in another report will override the
-     * value in current report.
+     * <p><b>Notice: </b>If there exists duplicate key, the value in another
+     * report will override the value in current report.
      *
      * @param other another report
      * @return report after mergence
@@ -188,14 +221,9 @@ public class ExecutionReport implements Serializable {
 
     /**
      * Print the container to the console.
-     *
-     * @return the string for printing
      */
-    public String print() {
-        CSVTableContainer<String, String, String> table =
-                new CSVTableContainer<>("key", String.class, String.class, String.class);
-        this.forEach((key, value) -> table.push(key, "value", value.toString()));
-        return table.print();
+    public void print() {
+        System.out.println(toString());
     }
 
     /**
@@ -220,5 +248,34 @@ public class ExecutionReport implements Serializable {
             }
             action.accept(k, v);
         }
+    }
+
+    /**
+     * Returns a new execution report consisting of all elements, sorted
+     * according to the provided {@code Comparator}. The {@code report}
+     * map in the new created {@code ExecutionReport} would be changed
+     * into {@link java.util.LinkedHashMap} to guarantee order.
+     *
+     * @param comparator a {@code Comparator<String>} for comparing keys
+     *                   in the report
+     * @return the new execution report
+     * @since 1.3.0
+     */
+    public ExecutionReport sort(Comparator<String> comparator) {
+        ExecutionReport executionReport = ExecutionReport.create();
+        executionReport.reports = Maps.newLinkedHashMap();
+        this.reports.keySet()
+                .stream()
+                .sorted(comparator)
+                .forEach(key -> executionReport.put(key, this.get(key)));
+        return executionReport;
+    }
+
+    @Override
+    public String toString() {
+        CSVTableContainer<String, String, String> table =
+                new CSVTableContainer<>("key", String.class, String.class, String.class);
+        this.forEach((key, value) -> table.push(key, "value", value.toString()));
+        return table.toString();
     }
 }

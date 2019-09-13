@@ -4,6 +4,7 @@ import cn.sissors.hummingbird.annotions.CanIgnoreReturnValue;
 import cn.sissors.hummingbird.exceptions.ContainerRuntimeException;
 import cn.sissors.hummingbird.exceptions.DataLoadingException;
 import cn.sissors.hummingbird.exceptions.DataPersistenceException;
+import cn.sissors.hummingbird.exceptions.IllegalValueTypeException;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import de.vandermeer.asciitable.AsciiTable;
@@ -194,16 +195,18 @@ public abstract class TableContainer<R, C, V> implements Cloneable, Serializable
      *
      * @param path external storage path
      * @return the container that has been loaded
-     * @throws DataLoadingException error appearance such as {@link java.io.IOException}, {@link cn.sissors.hummingbird.exceptions.IllegalValueTypeException} and so on
+     * @throws DataLoadingException error appearance such as {@link java.io.IOException},
+     *                              {@link IllegalValueTypeException} and so on
      */
     public abstract TableContainer<R, C, V> load(String path) throws DataLoadingException;
 
     /**
-     * Merge two containers into one and replaced the current.
+     * Merge two containers into single one and replaced the current.
      *
      * @param other another container with the sample (R, C, V) type
      * @return current container
      */
+    @CanIgnoreReturnValue
     public TableContainer<R, C, V> merge(TableContainer<R, C, V> other) {
         other.rowKeys().forEach(rowKey -> other.columnKeys().forEach(columnKey -> {
             V value = other.get(rowKey, columnKey);
@@ -215,12 +218,14 @@ public abstract class TableContainer<R, C, V> implements Cloneable, Serializable
     }
 
     /**
-     * Cut current container through filters. If no filter on column or row, pass <code>null</code>.
+     * Apply filters on the current container. If no filter is applied on the
+     * column or the row, pass <code>null</code> to this method.
      *
      * @param rowFilter    the filter applied for row keys
      * @param columnFilter the filter applied for column keys
      * @return current container
      */
+    @CanIgnoreReturnValue
     public TableContainer<R, C, V> filter(@Nullable Predicate<R> rowFilter, @Nullable Predicate<C> columnFilter) {
         final Predicate<R> finalRowFilter = rowFilter != null ? rowFilter : (rowKey -> true);
         final Predicate<C> finalColumnFilter = columnFilter != null ? columnFilter : (columnKey -> true);
@@ -238,34 +243,72 @@ public abstract class TableContainer<R, C, V> implements Cloneable, Serializable
      * @return sorted container
      */
     public TableContainer<R, C, V> sort() {
+        return sort(Comparator.comparing(Object::toString), Comparator.comparing(Object::toString));
+    }
+
+    /**
+     * Sort current container based on the given comparators of row and column keys.
+     * Comparator of <code>Null</code> value means not to sort.
+     *
+     * @param rowComparator    the comparator applied for row keys
+     * @param columnComparator the comparator applied for column keys
+     * @return sorted container
+     * @since 1.3.0
+     */
+    public TableContainer<R, C, V> sort(@Nullable Comparator<R> rowComparator, @Nullable Comparator<C> columnComparator) {
         TableContainer<R, C, V> other = this.clone();
         this.clean();
-        other.rowKeys().sort(Comparator.comparing(Object::toString));
-        other.columnKeys().sort(Comparator.comparing(Object::toString));
-        other.rowKeys().forEach(rowKey
-                -> other.columnKeys().forEach(columnKey
+        List<R> orderedRowKeys = other.rowKeys();
+        List<C> orderedColumnKeys = other.columnKeys();
+        if (rowComparator != null) {
+            orderedRowKeys.sort(rowComparator);
+        }
+        if (columnComparator != null) {
+            orderedColumnKeys.sort(columnComparator);
+        }
+        orderedRowKeys.forEach(rowKey
+                -> orderedColumnKeys.forEach(columnKey
                 -> push(rowKey, columnKey, other.get(rowKey, columnKey))));
         return this;
     }
 
     /**
      * Print the container to the console.
-     *
-     * @return the string for printing
      */
-    @CanIgnoreReturnValue
-    public String print() {
-        return print(System.out);
+    public void print() {
+        print(System.out);
     }
 
     /**
      * Print the container to the specified print stream.
      *
      * @param printStream the stream to receive output
-     * @return the string for printing
      */
-    @CanIgnoreReturnValue
-    public String print(PrintStream printStream) {
+    public void print(PrintStream printStream) {
+        printStream.println(toString());
+    }
+
+    public String getHeaderName() {
+        return headerName;
+    }
+
+    public void setHeaderName(String headerName) {
+        this.headerName = headerName;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public TableContainer<R, C, V> clone() {
+        try {
+            return (TableContainer<R, C, V>) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        throw new ContainerRuntimeException("the types of table don't support to clone");
+    }
+
+    @Override
+    public String toString() {
         AsciiTable asciiTable = new AsciiTable();
         List<String> columns = Lists.newLinkedList();
         columns.add(getHeaderName());
@@ -284,27 +327,6 @@ public abstract class TableContainer<R, C, V> implements Cloneable, Serializable
         });
         asciiTable.addRule();
         asciiTable.getRenderer().setCWC(new CWC_LongestLine());
-        String output = asciiTable.render();
-        printStream.println(output);
-        return output;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public TableContainer<R, C, V> clone() {
-        try {
-            return (TableContainer<R, C, V>) super.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-        throw new ContainerRuntimeException("the types of table don't support to clone");
-    }
-
-    public String getHeaderName() {
-        return headerName;
-    }
-
-    public void setHeaderName(String headerName) {
-        this.headerName = headerName;
+        return asciiTable.render();
     }
 }

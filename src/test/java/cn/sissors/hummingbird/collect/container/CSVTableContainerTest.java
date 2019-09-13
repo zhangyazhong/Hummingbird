@@ -8,6 +8,8 @@ import com.google.common.collect.ImmutableMap;
 import org.json.JSONObject;
 import org.junit.*;
 
+import java.util.Comparator;
+
 import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 
 /**
@@ -137,6 +139,21 @@ public class CSVTableContainerTest {
     }
 
     @Test
+    public void test0Sort2() {
+        CSVTableContainer<String, String, ResultUnit> csvTableContainer =
+                new CSVTableContainer<>("time", String.class, String.class, ResultUnit.class);
+        csvTableContainer.push("2:00", "cost", new ResultUnit(2, 0));
+        csvTableContainer.push("2:00", "count", new ResultUnit(2, 1));
+        csvTableContainer.push("1:00", "cost", new ResultUnit(1, 0));
+        csvTableContainer.push("1:00", "count", new ResultUnit(1, 1));
+        csvTableContainer.push("3:00", "cost", new ResultUnit(3, 0));
+        csvTableContainer.print();
+        csvTableContainer.sort((s1, s2) -> -s1.compareTo(s2), null).print();
+        csvTableContainer.sort(null, (s1, s2) -> -s1.compareTo(s2)).print();
+        csvTableContainer.sort(String::compareTo, Comparator.naturalOrder()).print();
+    }
+
+    @Test
     public void test0Merge() {
         CSVTableContainer<String, String, ResultUnit> csvTableContainer =
                 new CSVTableContainer<>("time", String.class, String.class, ResultUnit.class);
@@ -177,8 +194,7 @@ public class CSVTableContainerTest {
         csvTableContainer2.push("5:00", "result_1", new ResultUnit(2, 0.6));
         csvTableContainer2.print();
         csvTableContainer.merge(csvTableContainer2);
-        csvTableContainer.filter(rowKey -> rowKey.compareTo("4:00") < 0, columnKey -> true);
-        csvTableContainer.print();
+        csvTableContainer.filter(rowKey -> rowKey.compareTo("4:00") < 0, columnKey -> true).print();
     }
 
     @Test
