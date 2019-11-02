@@ -2,6 +2,7 @@ package cn.sissors.hummingbird.runtime.config;
 
 import com.google.common.collect.Lists;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -9,10 +10,10 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * JSONConfiguration is to handle configuration in <i>JSON</i> format.
@@ -79,18 +80,22 @@ public abstract class JSONConfiguration extends Configuration {
     public JSONConfiguration load() {
         for (String config : locations()) {
             try {
-                File file;
+                String content = null;
                 if (config.toLowerCase().startsWith("classpath:")) {
-                    file = new File(Objects.requireNonNull(this.getClass().getResource("/")).getPath() + StringUtils.substringAfter(config, ":").trim());
+                    InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(StringUtils.substringAfter(config, ":").trim());
+                    if (inputStream != null) {
+                        content = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+                    }
                 } else {
-                    file = new File(config);
+                    File file = new File(config);
+                    if (file.exists()) {
+                        content = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+                    }
                 }
-                if (!file.exists()) {
-                    continue;
+                if (content != null) {
+                    JSONObject json = new JSONObject(content);
+                    parse(json, "");
                 }
-                String content = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-                JSONObject json = new JSONObject(content);
-                parse(json, "");
             } catch (IOException e) {
                 e.printStackTrace();
             }

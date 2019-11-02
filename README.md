@@ -21,7 +21,7 @@ Hummingbird artifacts are hosted in Maven Central. You can add a Maven dependenc
 <dependency>
     <groupId>cn.sissors</groupId>
     <artifactId>hummingbird</artifactId>
-    <version>1.3.0</version>
+    <version>1.3.1</version>
 </dependency>
 ```
 
