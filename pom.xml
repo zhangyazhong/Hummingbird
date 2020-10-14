@@ -124,7 +124,7 @@
         <org.json.version>20160810</org.json.version>
         <ganymed-ssh2.version>build210</ganymed-ssh2.version>
         <aspectj.version>1.9.2</aspectj.version>
-        <log4j.version>2.11.1</log4j.version>
+        <log4j.version>2.13.2</log4j.version>
     </properties>
 
     <dependencies>
