@@ -118,7 +118,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <guava.version>23.0</guava.version>
         <common-lang3.version>3.7</common-lang3.version>
-        <commons-io.version>2.6</commons-io.version>
+        <commons-io.version>2.7</commons-io.version>
         <jetbrains.annotations.version>16.0.3</jetbrains.annotations.version>
         <asciitable.version>0.3.2</asciitable.version>
         <org.json.version>20160810</org.json.version>
